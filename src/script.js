@@ -134,6 +134,18 @@ const walls = new THREE.Mesh(
 walls.position.y = houseMeasurements.height / 2
 house.add(walls)
 
+// Windows
+const windowGeo = new THREE.PlaneGeometry(0.7, 1);
+const windowMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+const cozyWindow = new THREE.Mesh(windowGeo, windowMat);
+cozyWindow.position.set(houseMeasurements.width / 2 - 0.9, 1.5, houseMeasurements.depth / 2 + 0.01);
+house.add(cozyWindow);
+
+const rectLight = new THREE.RectAreaLight(0xffeeaa, 5, 0.7, 1);
+rectLight.position.copy(cozyWindow.position);
+rectLight.position.z += 0.01
+house.add(rectLight);
+
 // Roof
 const roof = new THREE.Object3D()
 
@@ -318,7 +330,16 @@ function animateSnowSpheres() {
         s.position.y -= 0.1; // falling speed
         s.position.x -= Math.random() * 0.01
         s.position.z += Math.random() * 0.01
-        if (s.position.y < 0) s.position.y = 50; // reset
+
+        // reset
+        if (s.position.y < 0) {
+            s.position.set(
+                (Math.random() - 0.5) * 50,
+                Math.random() * 50,
+                (Math.random() - 0.5) * 50
+            );
+
+        }
     });
 }
 
