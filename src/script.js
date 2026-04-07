@@ -40,9 +40,6 @@ const roofMeasurements = {
     plateWidth: Math.sqrt((houseMeasurements.width / 2) ** 2 + roofHeight ** 2)
 }
 
-console.log({roofMeasurements})
-
-
 // Floor
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(20, 20),
@@ -86,6 +83,41 @@ const roofRight = roofLeft.clone()
 roofRight.rotation.z = -Math.PI * 0.2
 roofRight.position.x = houseMeasurements.width / 4
 roof.add(roofRight)
+
+// Roof front and back
+
+const vertices = new Float32Array([
+    // left side
+    -houseMeasurements.width / 2, 0, -houseMeasurements.depth / 2,   // bottom left
+    houseMeasurements.width / 2, 0, -houseMeasurements.depth / 2,   // bottom right
+    0, roofMeasurements.height, -houseMeasurements.depth / 2, // top
+
+    // right side
+    -houseMeasurements.width / 2, 0,  houseMeasurements.depth / 2,
+    houseMeasurements.width / 2, 0,  houseMeasurements.depth / 2,
+    0, roofMeasurements.height,  houseMeasurements.depth / 2,
+])
+
+const indices = [
+    0, 1, 2, // front triangle
+    3, 5, 4  // back triangle
+]
+
+const bufferGeometry = new THREE.BufferGeometry()
+bufferGeometry.setAttribute(
+    'position',
+    new THREE.BufferAttribute(vertices, 3)
+)
+bufferGeometry.setIndex(indices)
+bufferGeometry.computeVertexNormals()
+
+const roofFrontAndBack = new THREE.Mesh(
+    bufferGeometry,
+    new THREE.MeshStandardMaterial({ side: THREE.DoubleSide })
+)
+
+roofFrontAndBack.position.y = houseMeasurements.height
+roof.add(roofFrontAndBack)
 
 house.add(roof)
 
