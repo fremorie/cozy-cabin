@@ -116,9 +116,6 @@ const wallsMaterial = new THREE.MeshStandardMaterial({
     roughnessMap: wallARMTexture,
     metalnessMap: wallARMTexture,
     normalMap: wallNormalTexture,
-    // displacementMap: wallDisplacementTexture,
-    // displacementScale: 0.2,
-    // displacementBias: -0.2,
 })
 
 // Walls
@@ -127,7 +124,6 @@ const walls = new THREE.Mesh(
         houseMeasurements.width,
         houseMeasurements.height,
         houseMeasurements.depth,
-        100, 100, 100
     ),
     wallsMaterial,
 )
@@ -141,7 +137,7 @@ const cozyWindow = new THREE.Mesh(windowGeo, windowMat);
 cozyWindow.position.set(houseMeasurements.width / 2 - 0.9, 1.5, houseMeasurements.depth / 2 + 0.01);
 house.add(cozyWindow);
 
-const rectLight = new THREE.RectAreaLight(0xffeeaa, 5, 0.7, 1);
+const rectLight = new THREE.RectAreaLight(0xffaa55, 5, 0.7, 1);
 rectLight.position.copy(cozyWindow.position);
 rectLight.position.z += 0.01
 house.add(rectLight);
@@ -212,7 +208,7 @@ const roofFrontAndBack = new THREE.Mesh(
 )
 
 roofFrontAndBack.position.y = houseMeasurements.height
-roof.add(roofFrontAndBack)
+house.add(roofFrontAndBack)
 
 house.add(roof)
 
@@ -220,7 +216,6 @@ house.add(roof)
 const door = new THREE.Mesh(
     new THREE.PlaneGeometry(houseMeasurements.doorWidth, houseMeasurements.doorHeight, 100, 100),
     new THREE.MeshStandardMaterial({
-        color: 'red',
         map: doorColorTexture,
         aoMap: doorARMTexture,
         roughnessMap: doorARMTexture,
@@ -240,13 +235,16 @@ house.add(door)
  * Lights
  */
 // Ambient light
-const ambientLight = new THREE.AmbientLight('#ffffff', 0.5)
+const ambientLight = new THREE.AmbientLight('#ffffff', 0.75)
 scene.add(ambientLight)
 
 // Directional light
 const directionalLight = new THREE.DirectionalLight('#ffffff', 1.5)
-directionalLight.position.set(3, 2, -8)
+directionalLight.position.set(10, 5, 3)
 scene.add(directionalLight)
+
+const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight)
+scene.add(directionalLightHelper)
 
 /**
  * Fog
@@ -320,6 +318,32 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+/**
+ * Shadows
+ */
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = THREE.PCFShadowMap
+
+// Cast and receive
+directionalLight.castShadow = true
+rectLight.castShadow = true
+
+walls.castShadow = true
+roofLeft.castShadow = true
+roofRight.castShadow = true
+roofFrontAndBack.castShadow = true
+floor.receiveShadow = true
+
+// Optimize performance
+directionalLight.shadow.mapSize.width = 256
+directionalLight.shadow.mapSize.height = 256
+directionalLight.shadow.camera.top = 8
+directionalLight.shadow.camera.right = 8
+directionalLight.shadow.camera.bottom = -8
+directionalLight.shadow.camera.left = -8
+directionalLight.shadow.camera.near = 1
+directionalLight.shadow.camera.far = 40
 
 /**
  * Animate
