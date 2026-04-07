@@ -1,5 +1,9 @@
 # Cozy cabin
 
+A Three.js scene with a cabin in the woods 🌲
+
+Demo: https://fremorie.github.io/cozy-cabin
+
 ## Setup
 ``` bash
 # Use the project's node version
