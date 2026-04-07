@@ -81,7 +81,7 @@ const roofMeasurements = {
 
     plateHeight: 0.2,
     plateDepth: 7,
-    plateWidth: Math.sqrt((houseMeasurements.width / 2) ** 2 + roofHeight ** 2)
+    plateWidth: Math.sqrt((houseMeasurements.width / 2) ** 2 + roofHeight ** 2) + 0.5
 }
 
 // Floor
@@ -223,7 +223,6 @@ for (const cozyWindow of cozyWindows) {
     createWindow(cozyWindow)
 }
 
-
 // Roof
 const roof = new THREE.Object3D()
 
@@ -237,7 +236,15 @@ roofLeft.position.x = -houseMeasurements.width / 4
 roofLeft.rotation.z = Math.PI * 0.2
 roof.add(roofLeft)
 
-const roofRight = roofLeft.clone()
+const roofRight = new THREE.Mesh(
+    new THREE.BoxGeometry(roofMeasurements.plateWidth, roofMeasurements.plateHeight, roofMeasurements.plateDepth + 0.02),
+    wallsMaterial,
+)
+
+roofRight.position.y = houseMeasurements.height + roofMeasurements.height / 2
+roofRight.position.x = -houseMeasurements.width / 4
+roofRight.rotation.z = Math.PI * 0.2
+
 roofRight.rotation.z = -Math.PI * 0.2
 roofRight.position.x = houseMeasurements.width / 4
 roof.add(roofRight)
@@ -331,8 +338,8 @@ scene.add(directionalLightHelper)
 /**
  * Fog
  */
-scene.background = new THREE.Color('#2c3e50')
-scene.fog = new THREE.Fog('#2c3e50', 10, 40)
+scene.background = new THREE.Color('#191D3B')
+scene.fog = new THREE.Fog('#191D3B', 10, 40)
 
 /**
  * Snow
