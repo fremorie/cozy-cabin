@@ -24,6 +24,39 @@ scene.add(axesHelper)
  */
 const textureLoader = new THREE.TextureLoader()
 
+// Tree trunks
+const trunkColorTexture = textureLoader.load('/textures/trees/pine/pine_bark_diff_1k.jpg')
+const trunkARMTexture = textureLoader.load('/textures/trees/pine/pine_bark_arm_1k.jpg')
+const trunkNormalTexture = textureLoader.load('/textures/trees/pine/pine_bark_nor_gl_1k.jpg')
+const trunkDisplacementTexture = textureLoader.load('/textures/trees/pine/pine_bark_disp_1k.jpg')
+
+trunkColorTexture.colorSpace = THREE.SRGBColorSpace
+
+// Snowy pines
+const treeColorTexture = textureLoader.load('/textures/trees/snow/snow_03_diff_1k.jpg')
+const treeARMTexture = textureLoader.load('/textures/trees/snow/snow_03_arm_1k.jpg')
+const treeNormalTexture = textureLoader.load('/textures/trees/snow/snow_03_nor_gl_1k.jpg')
+const treeDisplacementTexture = textureLoader.load('/textures/trees/snow/snow_03_disp_1k.jpg')
+
+treeColorTexture.colorSpace = THREE.SRGBColorSpace
+
+treeColorTexture.repeat.set(3, 3)
+treeColorTexture.wrapS = THREE.RepeatWrapping
+treeColorTexture.wrapT = THREE.RepeatWrapping
+
+treeARMTexture.repeat.set(3, 3)
+treeARMTexture.wrapS = THREE.RepeatWrapping
+treeARMTexture.wrapT = THREE.RepeatWrapping
+
+treeNormalTexture.repeat.set(3, 3)
+treeNormalTexture.wrapS = THREE.RepeatWrapping
+treeNormalTexture.wrapT = THREE.RepeatWrapping
+
+treeDisplacementTexture.repeat.set(3, 3)
+treeDisplacementTexture.wrapS = THREE.RepeatWrapping
+treeDisplacementTexture.wrapT = THREE.RepeatWrapping
+
+
 // Floor
 const floorAlphaTexture = textureLoader.load('/textures/floor/alpha.webp')
 
@@ -150,27 +183,47 @@ floor.rotation.x = - Math.PI / 2
 scene.add(floor)
 
 // Trees
+
+// Leaves (stacked cones)
+const coneMaterial = new THREE.MeshStandardMaterial({
+    map: treeColorTexture,
+    aoMap: treeARMTexture,
+    roughnessMap: treeARMTexture,
+    metalnessMap: treeARMTexture,
+    normalMap: treeNormalTexture,
+})
+
+const trunkMaterial = new THREE.MeshStandardMaterial({
+    map: trunkColorTexture,
+    aoMap: trunkARMTexture,
+    roughnessMap: trunkARMTexture,
+    metalnessMap: trunkARMTexture,
+    normalMap: trunkNormalTexture,
+})
+
+const trunkGeometry = new THREE.CylinderGeometry(0.1, 0.15, 1, 8)
+const bigConeGeometry = new THREE.ConeGeometry(0.8, 1.5, 8)
+const mediumConeGeometry = new THREE.ConeGeometry(0.6, 1.2, 8)
+const smallConeGeometry = new THREE.ConeGeometry(0.4, 1.0, 8)
+
 function createPineTree() {
     const group = new THREE.Group()
 
     // Trunk
     const trunk = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.1, 0.15, 1, 8),
-        new THREE.MeshStandardMaterial({ color: 0x8b5a2b })
+        trunkGeometry,
+        trunkMaterial,
     )
     trunk.position.y = 0.5
     group.add(trunk)
 
-    // Leaves (stacked cones)
-    const coneMaterial = new THREE.MeshStandardMaterial({ color: 0x2e8b57 })
-
-    const cone1 = new THREE.Mesh(new THREE.ConeGeometry(0.8, 1.5, 8), coneMaterial)
+    const cone1 = new THREE.Mesh(bigConeGeometry, coneMaterial)
     cone1.position.y = 1.5
 
-    const cone2 = new THREE.Mesh(new THREE.ConeGeometry(0.6, 1.2, 8), coneMaterial)
+    const cone2 = new THREE.Mesh(mediumConeGeometry, coneMaterial)
     cone2.position.y = 2.2
 
-    const cone3 = new THREE.Mesh(new THREE.ConeGeometry(0.4, 1.0, 8), coneMaterial)
+    const cone3 = new THREE.Mesh(smallConeGeometry, coneMaterial)
     cone3.position.y = 2.8
 
     group.add(cone1, cone2, cone3)
@@ -182,6 +235,7 @@ function createPineTree() {
 }
 
 const treeCount = 20
+const pineTreeGroup = new THREE.Group()
 
 for (let i = 0; i < treeCount; i++) {
     const tree = createPineTree()
@@ -197,7 +251,7 @@ for (let i = 0; i < treeCount; i++) {
         z = -Math.abs(z)
     }
 
-    tree.scale.setScalar(0.8 + Math.random() * 0.5)
+    tree.scale.setScalar(0.8 + Math.random() * 0.8)
     tree.rotation.y = Math.random() * Math.PI
     tree.position.set(
         x,
@@ -205,11 +259,10 @@ for (let i = 0; i < treeCount; i++) {
         z,
     )
 
-    scene.add(tree)
+    pineTreeGroup.add(tree)
 }
 
-
-
+scene.add(pineTreeGroup)
 
 // House container
 const house = new THREE.Group()
