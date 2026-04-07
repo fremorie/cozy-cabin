@@ -7,7 +7,7 @@ import {debug} from "three/tsl";
  * Base
  */
 // Debug
-const gui = new GUI()
+// const gui = new GUI()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -17,7 +17,7 @@ const scene = new THREE.Scene()
 
 // Axes helper
 const axesHelper = new THREE.AxesHelper(10)
-scene.add(axesHelper)
+// scene.add(axesHelper)
 
 /**
  * Textures
@@ -550,12 +550,9 @@ const ambientLight = new THREE.AmbientLight('#ffffff', 0.7)
 scene.add(ambientLight)
 
 // Directional light
-const directionalLight = new THREE.DirectionalLight('#ffffff', 1.5)
+const directionalLight = new THREE.DirectionalLight('#F5F0BF', 1.5)
 directionalLight.position.set(10, 5, 3)
 scene.add(directionalLight)
-
-const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight)
-scene.add(directionalLightHelper)
 
 /**
  * Fog
@@ -612,9 +609,9 @@ window.addEventListener('resize', () =>
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.x = 4
-camera.position.y = 2
-camera.position.z = 5
+camera.position.x = 15
+camera.position.y = 6
+camera.position.z = 15
 scene.add(camera)
 
 // Controls
