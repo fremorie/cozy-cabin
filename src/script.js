@@ -237,6 +237,12 @@ directionalLight.position.set(3, 2, -8)
 scene.add(directionalLight)
 
 /**
+ * Fog
+ */
+scene.background = new THREE.Color('#2c3e50')
+scene.fog = new THREE.Fog('#2c3e50', 10, 40)
+
+/**
  * Sizes
  */
 const sizes = {
