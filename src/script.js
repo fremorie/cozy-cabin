@@ -243,6 +243,27 @@ scene.background = new THREE.Color('#2c3e50')
 scene.fog = new THREE.Fog('#2c3e50', 10, 40)
 
 /**
+ * Snow
+ */
+const snowSpheres = [];
+const snowCount = 1000;
+const geometry = new THREE.SphereGeometry(0.05, 6, 6);
+const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+
+for (let i = 0; i < snowCount; i++) {
+    const sphere = new THREE.Mesh(geometry, material);
+
+    sphere.position.set(
+        (Math.random() - 0.5) * 50,
+        Math.random() * 50,
+        (Math.random() - 0.5) * 50
+    );
+
+    scene.add(sphere);
+    snowSpheres.push(sphere);
+}
+
+/**
  * Sizes
  */
 const sizes = {
@@ -291,6 +312,16 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 /**
  * Animate
  */
+
+function animateSnowSpheres() {
+    snowSpheres.forEach(s => {
+        s.position.y -= 0.1; // falling speed
+        s.position.x -= Math.random() * 0.01
+        s.position.z += Math.random() * 0.01
+        if (s.position.y < 0) s.position.y = 50; // reset
+    });
+}
+
 const timer = new THREE.Timer()
 
 const tick = () =>
@@ -298,6 +329,7 @@ const tick = () =>
     // Timer
     timer.update()
     const elapsedTime = timer.getElapsed()
+    animateSnowSpheres()
 
     // Update controls
     controls.update()
