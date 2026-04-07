@@ -149,6 +149,57 @@ floor.rotation.x = - Math.PI / 2
 
 scene.add(floor)
 
+// Trees
+function createPineTree() {
+    const group = new THREE.Group()
+
+    // Trunk
+    const trunk = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.1, 0.15, 1, 8),
+        new THREE.MeshStandardMaterial({ color: 0x8b5a2b })
+    )
+    trunk.position.y = 0.5
+    group.add(trunk)
+
+    // Leaves (stacked cones)
+    const coneMaterial = new THREE.MeshStandardMaterial({ color: 0x2e8b57 })
+
+    const cone1 = new THREE.Mesh(new THREE.ConeGeometry(0.8, 1.5, 8), coneMaterial)
+    cone1.position.y = 1.5
+
+    const cone2 = new THREE.Mesh(new THREE.ConeGeometry(0.6, 1.2, 8), coneMaterial)
+    cone2.position.y = 2.2
+
+    const cone3 = new THREE.Mesh(new THREE.ConeGeometry(0.4, 1.0, 8), coneMaterial)
+    cone3.position.y = 2.8
+
+    group.add(cone1, cone2, cone3)
+
+    cone1.position.x += (Math.random() - 0.5) * 0.1
+    cone2.scale.y *= 0.9 + Math.random() * 0.2
+
+    return group
+}
+
+const treeCount = 20
+
+for (let i = 0; i < treeCount; i++) {
+    const tree = createPineTree()
+
+    tree.scale.setScalar(0.8 + Math.random() * 0.5)
+    tree.rotation.y = Math.random() * Math.PI
+    tree.position.set(
+        (Math.random() - 0.5) * 20,
+        0,
+        (Math.random() - 0.5) * 20
+    )
+
+    scene.add(tree)
+}
+
+
+
+
 // House container
 const house = new THREE.Group()
 scene.add(house)
