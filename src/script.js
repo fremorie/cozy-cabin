@@ -253,20 +253,24 @@ const roofMaterial = new THREE.MeshStandardMaterial({
     roughnessMap: roofARMTexture,
     metalnessMap: roofARMTexture,
     normalMap: roofNormalTexture,
+    displacementMap: roofDisplacementTexture,
+    displacementScale: 0.3,
+    displacementBias: -0.2,
 })
 
 const roofLeft = new THREE.Mesh(
-    new THREE.BoxGeometry(roofMeasurements.plateWidth, roofMeasurements.plateHeight, roofMeasurements.plateDepth),
+    new THREE.BoxGeometry(roofMeasurements.plateWidth, roofMeasurements.plateHeight, roofMeasurements.plateDepth, 100, 100),
     roofMaterial,
 )
 
 roofLeft.position.y = houseMeasurements.height + roofMeasurements.height / 2
 roofLeft.position.x = -houseMeasurements.width / 4
-roofLeft.rotation.z = Math.PI * 0.2
+// Hack: add extra PI to flip the texture
+roofLeft.rotation.z = Math.PI * 0.2 + Math.PI
 roof.add(roofLeft)
 
 const roofRight = new THREE.Mesh(
-    new THREE.BoxGeometry(roofMeasurements.plateWidth, roofMeasurements.plateHeight, roofMeasurements.plateDepth + 0.02),
+    new THREE.BoxGeometry(roofMeasurements.plateWidth, roofMeasurements.plateHeight, roofMeasurements.plateDepth + 0.02, 100, 100),
     roofMaterial,
 )
 
@@ -353,7 +357,7 @@ house.add(door)
  * Lights
  */
 // Ambient light
-const ambientLight = new THREE.AmbientLight('#ffffff', 0.75)
+const ambientLight = new THREE.AmbientLight('#ffffff', 0.7)
 scene.add(ambientLight)
 
 // Directional light
