@@ -324,6 +324,7 @@ function createWindow({x, y, z, rotation = 0}) {
     rectLight.position.x += 0.01
     rectLight.position.y += 0.01
     rectLight.rotation.y = rotation
+    rectLight.castShadow = true
     cozyWindow.add(rectLight);
 
     // Rim
@@ -637,20 +638,30 @@ renderer.shadowMap.type = THREE.PCFShadowMap
 directionalLight.castShadow = true
 
 walls.castShadow = true
+walls.receiveShadow = true
 roofLeft.castShadow = true
 roofRight.castShadow = true
 roofFrontAndBack.castShadow = true
+roofFrontAndBack.receiveShadow = true
 floor.receiveShadow = true
+doorRimTop.castShadow = true
+
+for (const pinetree of pineTreeGroup.children) {
+    for (const pinetreePart of pinetree.children) {
+        pinetreePart.castShadow = true
+        pinetreePart.receiveShadow = true
+    }
+}
 
 // Optimize performance
 directionalLight.shadow.mapSize.width = 256
 directionalLight.shadow.mapSize.height = 256
-directionalLight.shadow.camera.top = 8
-directionalLight.shadow.camera.right = 8
-directionalLight.shadow.camera.bottom = -8
-directionalLight.shadow.camera.left = -8
+directionalLight.shadow.camera.top = 40
+directionalLight.shadow.camera.right = 40
+directionalLight.shadow.camera.bottom = -40
+directionalLight.shadow.camera.left = -40
 directionalLight.shadow.camera.near = 1
-directionalLight.shadow.camera.far = 40
+directionalLight.shadow.camera.far = 80
 
 /**
  * Animate
