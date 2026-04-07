@@ -131,16 +131,49 @@ walls.position.y = houseMeasurements.height / 2
 house.add(walls)
 
 // Windows
-const windowGeo = new THREE.PlaneGeometry(0.7, 1);
+const cozyWindowSize = 0.8
+const windowGeo = new THREE.PlaneGeometry(cozyWindowSize, cozyWindowSize);
 const windowMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
-const cozyWindow = new THREE.Mesh(windowGeo, windowMat);
-cozyWindow.position.set(houseMeasurements.width / 2 - 0.9, 1.5, houseMeasurements.depth / 2 + 0.01);
-house.add(cozyWindow);
+const rimGeometry = new THREE.TorusGeometry(0.55, 0.1, 5, 4)
+const rimMaterial = new THREE.MeshStandardMaterial({color: 0x5C413C, side: THREE.DoubleSide,})
 
-const rectLight = new THREE.RectAreaLight(0xffaa55, 5, 0.7, 1);
-rectLight.position.copy(cozyWindow.position);
-rectLight.position.z += 0.01
-house.add(rectLight);
+
+function createWindow({x, y, z}) {
+    // Window plane
+    const cozyWindow = new THREE.Mesh(windowGeo, windowMat);
+    cozyWindow.position.set(x, y, z);
+    house.add(cozyWindow);
+
+    // Light
+    const rectLight = new THREE.RectAreaLight(0xffaa55, 5, cozyWindowSize, cozyWindowSize);
+    rectLight.position.copy(cozyWindow.position);
+    rectLight.position.z += 0.01
+    house.add(rectLight);
+
+    // Rim
+    const rim = new THREE.Mesh(rimGeometry, rimMaterial)
+    rim.position.set(x, y, z)
+    rim.rotation.z = Math.PI / 4
+    house.add(rim)
+}
+
+const cozyWindows = [
+    {
+        x: houseMeasurements.width / 2 - 0.9,
+        y: 1.55,
+        z: houseMeasurements.depth / 2 + 0.01,
+    },
+    {
+        x: - houseMeasurements.width / 2 + 0.9,
+        y: 1.55,
+        z: houseMeasurements.depth / 2 + 0.01,
+    },
+]
+
+for (const cozyWindow of cozyWindows) {
+    createWindow(cozyWindow)
+}
+
 
 // Roof
 const roof = new THREE.Object3D()
@@ -327,7 +360,6 @@ renderer.shadowMap.type = THREE.PCFShadowMap
 
 // Cast and receive
 directionalLight.castShadow = true
-rectLight.castShadow = true
 
 walls.castShadow = true
 roofLeft.castShadow = true
