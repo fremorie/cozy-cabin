@@ -96,7 +96,13 @@ const roof = new THREE.Object3D()
 
 const roofLeft = new THREE.Mesh(
     new THREE.BoxGeometry(roofMeasurements.plateWidth, roofMeasurements.plateHeight, roofMeasurements.plateDepth),
-    new THREE.MeshStandardMaterial()
+    new THREE.MeshStandardMaterial({
+        map: wallColorTexture,
+        aoMap: wallARMTexture,
+        roughnessMap: wallARMTexture,
+        metalnessMap: wallARMTexture,
+        normalMap: wallNormalTexture,
+    })
 )
 
 roofLeft.position.y = houseMeasurements.height + roofMeasurements.height / 2
