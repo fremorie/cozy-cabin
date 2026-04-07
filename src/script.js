@@ -160,7 +160,6 @@ const wallsMaterial = new THREE.MeshStandardMaterial({
     roughnessMap: wallARMTexture,
     metalnessMap: wallARMTexture,
     normalMap: wallNormalTexture,
-    displacementMap: wallDisplacementTexture,
 })
 
 // Walls
@@ -374,7 +373,7 @@ house.add(roof)
 const door = new THREE.Mesh(
     new THREE.PlaneGeometry(houseMeasurements.doorWidth, houseMeasurements.doorHeight, 100, 100),
     new THREE.MeshStandardMaterial({
-        color: 0xb6b1b9,
+        color: 0x6B6B6B,
         transparent: true,
         alphaMap: doorAlphaTexture,
         map: doorColorTexture,
