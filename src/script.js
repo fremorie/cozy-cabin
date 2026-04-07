@@ -23,10 +23,34 @@ scene.add(axesHelper)
  */
 const textureLoader = new THREE.TextureLoader()
 
+// Floor
+const floorAlphaTexture = textureLoader.load('/textures/floor/alpha.webp')
+
+const floorColorTexture = textureLoader.load('/textures/floor/snow/snow_02_diff_1k.jpg')
+const floorARMTexture = textureLoader.load('/textures/floor/snow/snow_02_arm_1k.jpg')
+const floorNormalTexture = textureLoader.load('/textures/floor/snow/snow_02_nor_gl_1k.jpg')
+const floorDisplacementTexture = textureLoader.load('/textures/floor/snow/snow_02_disp_1k.jpg')
+
+const FLOOR_TEXTURES = [
+    floorColorTexture,
+    floorARMTexture,
+    floorNormalTexture,
+    floorDisplacementTexture,
+]
+
+floorColorTexture.colorSpace = THREE.SRGBColorSpace
+
+FLOOR_TEXTURES.forEach(texture => {
+    texture.repeat.set(2, 2)
+    texture.wrapS = THREE.RepeatWrapping
+    texture.wrapT = THREE.RepeatWrapping
+})
+
 // Walls
 const wallColorTexture = textureLoader.load('/textures/walls/wood_planks_diff_1k.jpg')
 const wallARMTexture = textureLoader.load('/textures/walls/wood_planks_arm_1k.jpg')
 const wallNormalTexture = textureLoader.load('/textures/walls/wood_planks_nor_gl_1k.jpg')
+const wallDisplacementTexture = textureLoader.load('/textures/walls/wood_planks_disp_1k.jpg')
 
 wallColorTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -34,6 +58,7 @@ wallColorTexture.colorSpace = THREE.SRGBColorSpace
 const doorColorTexture = textureLoader.load('/textures/door/rough_pine_door_diff_1k.jpg')
 const doorARMTexture = textureLoader.load('/textures/door/rough_pine_door_arm_1k.jpg')
 const doorNormalTexture = textureLoader.load('/textures/door/rough_pine_door_nor_gl_1k.jpg')
+const doorDisplacementTexture = textureLoader.load('/textures/door/rough_pine_door_disp_1k.jpg')
 
 doorColorTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -61,8 +86,19 @@ const roofMeasurements = {
 
 // Floor
 const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(20, 20),
-    new THREE.MeshStandardMaterial()
+    new THREE.PlaneGeometry(40, 40, 200, 200),
+    new THREE.MeshStandardMaterial({
+        transparent: true,
+        alphaMap: floorAlphaTexture,
+        map: floorColorTexture,
+        aoMap: floorARMTexture,
+        roughnessMap: floorARMTexture,
+        metalnessMap: floorARMTexture,
+        normalMap: floorNormalTexture,
+        displacementMap: floorDisplacementTexture,
+        displacementScale: 0.3,
+        displacementBias: -0.2,
+    })
 )
 
 floor.rotation.x = - Math.PI / 2
@@ -73,20 +109,27 @@ scene.add(floor)
 const house = new THREE.Group()
 scene.add(house)
 
+const wallsMaterial = new THREE.MeshStandardMaterial({
+    side: THREE.DoubleSide,
+    map: wallColorTexture,
+    aoMap: wallARMTexture,
+    roughnessMap: wallARMTexture,
+    metalnessMap: wallARMTexture,
+    normalMap: wallNormalTexture,
+    // displacementMap: wallDisplacementTexture,
+    // displacementScale: 0.2,
+    // displacementBias: -0.2,
+})
+
 // Walls
 const walls = new THREE.Mesh(
     new THREE.BoxGeometry(
         houseMeasurements.width,
         houseMeasurements.height,
         houseMeasurements.depth,
+        100, 100, 100
     ),
-    new THREE.MeshStandardMaterial({
-        map: wallColorTexture,
-        aoMap: wallARMTexture,
-        roughnessMap: wallARMTexture,
-        metalnessMap: wallARMTexture,
-        normalMap: wallNormalTexture,
-    }),
+    wallsMaterial,
 )
 walls.position.y = houseMeasurements.height / 2
 house.add(walls)
@@ -96,13 +139,7 @@ const roof = new THREE.Object3D()
 
 const roofLeft = new THREE.Mesh(
     new THREE.BoxGeometry(roofMeasurements.plateWidth, roofMeasurements.plateHeight, roofMeasurements.plateDepth),
-    new THREE.MeshStandardMaterial({
-        map: wallColorTexture,
-        aoMap: wallARMTexture,
-        roughnessMap: wallARMTexture,
-        metalnessMap: wallARMTexture,
-        normalMap: wallNormalTexture,
-    })
+    wallsMaterial,
 )
 
 roofLeft.position.y = houseMeasurements.height + roofMeasurements.height / 2
@@ -159,14 +196,7 @@ bufferGeometry.computeVertexNormals()
 
 const roofFrontAndBack = new THREE.Mesh(
     bufferGeometry,
-    new THREE.MeshStandardMaterial({
-        side: THREE.DoubleSide,
-        map: wallColorTexture,
-        aoMap: wallARMTexture,
-        roughnessMap: wallARMTexture,
-        metalnessMap: wallARMTexture,
-        normalMap: wallNormalTexture,
-    })
+    wallsMaterial,
 )
 
 roofFrontAndBack.position.y = houseMeasurements.height
@@ -176,13 +206,15 @@ house.add(roof)
 
 // Door
 const door = new THREE.Mesh(
-    new THREE.PlaneGeometry(houseMeasurements.doorWidth, houseMeasurements.doorHeight),
+    new THREE.PlaneGeometry(houseMeasurements.doorWidth, houseMeasurements.doorHeight, 100, 100),
     new THREE.MeshStandardMaterial({
+        color: 'red',
         map: doorColorTexture,
         aoMap: doorARMTexture,
         roughnessMap: doorARMTexture,
         metalnessMap: doorARMTexture,
         normalMap: doorNormalTexture,
+        //displacementMap: doorDisplacementTexture,
     }),
 )
 
