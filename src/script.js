@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons'
 import GUI from 'lil-gui'
+import {debug} from "three/tsl";
 
 /**
  * Base
@@ -47,12 +48,32 @@ FLOOR_TEXTURES.forEach(texture => {
 })
 
 // Walls
-const wallColorTexture = textureLoader.load('/textures/walls/wood_planks_diff_1k.jpg')
-const wallARMTexture = textureLoader.load('/textures/walls/wood_planks_arm_1k.jpg')
-const wallNormalTexture = textureLoader.load('/textures/walls/wood_planks_nor_gl_1k.jpg')
-const wallDisplacementTexture = textureLoader.load('/textures/walls/wood_planks_disp_1k.jpg')
+const wallColorTexture = textureLoader.load('/textures/walls/shutter/wood_shutter_diff_1k.jpg')
+const wallARMTexture = textureLoader.load('/textures/walls/shutter/wood_shutter_arm_1k.jpg')
+const wallNormalTexture = textureLoader.load('/textures/walls/shutter/wood_shutter_nor_gl_1k.jpg')
+const wallDisplacementTexture = textureLoader.load('/textures/shutter/wood_shutter_disp_1k.jpg')
 
 wallColorTexture.colorSpace = THREE.SRGBColorSpace
+
+wallColorTexture.center.set(0.5, 0.5)
+wallColorTexture.rotation = Math.PI / 2
+
+wallARMTexture.center.set(0.5, 0.5)
+wallARMTexture.rotation = Math.PI / 2
+
+wallNormalTexture.center.set(0.5, 0.5)
+wallNormalTexture.rotation = Math.PI / 2
+
+wallDisplacementTexture.center.set(0.5, 0.5)
+wallDisplacementTexture.rotation = Math.PI / 2
+
+// Rim
+const rimColorTexture = textureLoader.load('/textures/rim/plywood_diff_1k.jpg')
+const rimARMTexture = textureLoader.load('/textures/rim/plywood_arm_1k.jpg')
+const rimNormalTexture = textureLoader.load('/textures/rim/plywood_nor_gl_1k.jpg')
+const rimDisplacementTexture = textureLoader.load('/textures/rim/plywood_disp_1k.jpg')
+
+rimColorTexture.colorSpace = THREE.SRGBColorSpace
 
 // Roof
 const roofColorTexture = textureLoader.load('/textures/roof/clay_roof_tiles_03_diff_1k.jpg')
@@ -75,10 +96,13 @@ roofDisplacementTexture.rotation = Math.PI / 2
 roofColorTexture.colorSpace = THREE.SRGBColorSpace
 
 // Door
-const doorColorTexture = textureLoader.load('/textures/door/rough_pine_door_diff_1k.jpg')
-const doorARMTexture = textureLoader.load('/textures/door/rough_pine_door_arm_1k.jpg')
-const doorNormalTexture = textureLoader.load('/textures/door/rough_pine_door_nor_gl_1k.jpg')
-const doorDisplacementTexture = textureLoader.load('/textures/door/rough_pine_door_disp_1k.jpg')
+const doorColorTexture = textureLoader.load('/textures/door/color.webp')
+const doorAlphaTexture = textureLoader.load('/textures/door/alpha.webp')
+const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.webp')
+const doorHeightTexture = textureLoader.load('/textures/door/height.webp')
+const doorNormalTexture = textureLoader.load('/textures/door/normal.webp')
+const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.webp')
+const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.webp')
 
 doorColorTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -90,7 +114,7 @@ const houseMeasurements = {
     depth: 6,
     height: 3,
 
-    doorWidth: 1.5,
+    doorWidth: 2.2,
     doorHeight: 2.2,
 }
 
@@ -136,6 +160,7 @@ const wallsMaterial = new THREE.MeshStandardMaterial({
     roughnessMap: wallARMTexture,
     metalnessMap: wallARMTexture,
     normalMap: wallNormalTexture,
+    displacementMap: wallDisplacementTexture,
 })
 
 // Walls
@@ -144,6 +169,8 @@ const walls = new THREE.Mesh(
         houseMeasurements.width,
         houseMeasurements.height,
         houseMeasurements.depth,
+        100,
+        100,
     ),
     wallsMaterial,
 )
@@ -156,7 +183,14 @@ const windowGeo = new THREE.PlaneGeometry(cozyWindowSize, cozyWindowSize);
 const windowMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
 
 const rimGeometry = new THREE.TorusGeometry(0.55, 0.1, 5, 4)
-const rimMaterial = new THREE.MeshStandardMaterial({color: 0x5C413C, side: THREE.DoubleSide,})
+const rimMaterial = new THREE.MeshStandardMaterial({
+    color: 0xd7935b,
+    map: rimColorTexture,
+    aoMap: rimARMTexture,
+    roughnessMap: rimARMTexture,
+    metalnessMap: rimARMTexture,
+    normalMap: rimNormalTexture,
+})
 
 const stickGeometry = new THREE.BoxGeometry(cozyWindowSize, 0.05, 0.1)
 
@@ -338,12 +372,17 @@ house.add(roof)
 const door = new THREE.Mesh(
     new THREE.PlaneGeometry(houseMeasurements.doorWidth, houseMeasurements.doorHeight, 100, 100),
     new THREE.MeshStandardMaterial({
+        color: 0xb6b1b9,
+        transparent: true,
+        alphaMap: doorAlphaTexture,
         map: doorColorTexture,
-        aoMap: doorARMTexture,
-        roughnessMap: doorARMTexture,
-        metalnessMap: doorARMTexture,
+        aoMap: doorAmbientOcclusionTexture,
+        displacementMap: doorHeightTexture,
+        displacementScale: 0.15,
+        displacementBasis: -0.04,
+        roughnessMap: doorRoughnessTexture,
+        metalnessMap: doorMetalnessTexture,
         normalMap: doorNormalTexture,
-        //displacementMap: doorDisplacementTexture,
     }),
 )
 
@@ -356,27 +395,26 @@ house.add(door)
 // Door rim
 const doorRimGroup = new THREE.Group()
 const doorRimGeometry = new THREE.BoxGeometry(0.2, houseMeasurements.doorHeight + 0.2, 0.2)
-const doorRimMaterial = new THREE.MeshStandardMaterial({color: 0x5C413C, side: THREE.DoubleSide,})
 
-const doorRimLeft = new THREE.Mesh(doorRimGeometry, doorRimMaterial)
+const doorRimLeft = new THREE.Mesh(doorRimGeometry, rimMaterial)
 doorRimLeft.position.set(
-    -houseMeasurements.doorWidth / 2 + 0.1,
+    -houseMeasurements.doorWidth / 2 + 0.4,
     houseMeasurements.doorHeight / 2,
     houseMeasurements.depth / 2
 )
 doorRimGroup.add(doorRimLeft)
 
-const doorRimRight = new THREE.Mesh(doorRimGeometry, doorRimMaterial)
+const doorRimRight = new THREE.Mesh(doorRimGeometry, rimMaterial)
 doorRimRight.position.set(
-    houseMeasurements.doorWidth / 2 - 0.1,
+    houseMeasurements.doorWidth / 2 - 0.4,
     houseMeasurements.doorHeight / 2,
     houseMeasurements.depth / 2
 )
 doorRimGroup.add(doorRimRight)
 
 const doorRimTop = new THREE.Mesh(
-    new THREE.BoxGeometry(houseMeasurements.doorWidth - 0.4, 0.2, 0.2),
-    doorRimMaterial,
+    new THREE.BoxGeometry(houseMeasurements.doorWidth - 0.4, 0.2, 0.21),
+    rimMaterial,
 )
 doorRimTop.position.set(
     0,
