@@ -30,6 +30,13 @@ const wallNormalTexture = textureLoader.load('/textures/walls/wood_planks_nor_gl
 
 wallColorTexture.colorSpace = THREE.SRGBColorSpace
 
+// Door
+const doorColorTexture = textureLoader.load('/textures/door/rough_pine_door_diff_1k.jpg')
+const doorARMTexture = textureLoader.load('/textures/door/rough_pine_door_arm_1k.jpg')
+const doorNormalTexture = textureLoader.load('/textures/door/rough_pine_door_nor_gl_1k.jpg')
+
+doorColorTexture.colorSpace = THREE.SRGBColorSpace
+
 /**
  * House
  */
@@ -38,7 +45,7 @@ const houseMeasurements = {
     depth: 6,
     height: 3.5,
 
-    doorWidth: 2.2,
+    doorWidth: 1.5,
     doorHeight: 2.2,
 }
 
@@ -164,7 +171,13 @@ house.add(roof)
 // Door
 const door = new THREE.Mesh(
     new THREE.PlaneGeometry(houseMeasurements.doorWidth, houseMeasurements.doorHeight),
-    new THREE.MeshStandardMaterial({color: 0xff0000}),
+    new THREE.MeshStandardMaterial({
+        map: doorColorTexture,
+        aoMap: doorARMTexture,
+        roughnessMap: doorARMTexture,
+        metalnessMap: doorARMTexture,
+        normalMap: doorNormalTexture,
+    }),
 )
 
 // Add 0.01 to prevent z-fighting
