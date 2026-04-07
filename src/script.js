@@ -76,10 +76,10 @@ const rimDisplacementTexture = textureLoader.load('/textures/rim/plywood_disp_1k
 rimColorTexture.colorSpace = THREE.SRGBColorSpace
 
 // Roof
-const roofColorTexture = textureLoader.load('/textures/roof/clay_roof_tiles_03_diff_1k.jpg')
-const roofARMTexture = textureLoader.load('/textures/roof/clay_roof_tiles_03_arm_1k.jpg')
-const roofNormalTexture = textureLoader.load('/textures/roof/clay_roof_tiles_03_nor_gl_1k.jpg')
-const roofDisplacementTexture = textureLoader.load('/textures/roof/clay_roof_tiles_03_disp_1k.jpg')
+const roofColorTexture = textureLoader.load('/textures/roof/reeds/reed_roof_03_diff_1k.jpg')
+const roofARMTexture = textureLoader.load('/textures/roof/reeds/reed_roof_03_arm_1k.jpg')
+const roofNormalTexture = textureLoader.load('/textures/roof/reeds/reed_roof_03_nor_gl_1k.jpg')
+const roofDisplacementTexture = textureLoader.load('/textures/roof/reeds/reed_roof_03_disp_1k.jpg')
 
 roofColorTexture.center.set(0.5, 0.5)
 roofColorTexture.rotation = Math.PI / 2
@@ -282,14 +282,12 @@ const roof = new THREE.Object3D()
 
 const roofMaterial = new THREE.MeshStandardMaterial({
     side: THREE.DoubleSide,
+    color: 0x967C33,
     map: roofColorTexture,
     aoMap: roofARMTexture,
     roughnessMap: roofARMTexture,
     metalnessMap: roofARMTexture,
     normalMap: roofNormalTexture,
-    displacementMap: roofDisplacementTexture,
-    displacementScale: 0.3,
-    displacementBias: -0.2,
 })
 
 const roofLeft = new THREE.Mesh(
@@ -301,6 +299,8 @@ roofLeft.position.y = houseMeasurements.height + roofMeasurements.height / 2
 roofLeft.position.x = -houseMeasurements.width / 4
 // Hack: add extra PI to flip the texture
 roofLeft.rotation.z = Math.PI * 0.2 + Math.PI
+roofLeft.translateX(0.25)
+
 roof.add(roofLeft)
 
 const roofRight = new THREE.Mesh(
@@ -314,6 +314,8 @@ roofRight.rotation.z = Math.PI * 0.2
 
 roofRight.rotation.z = -Math.PI * 0.2
 roofRight.position.x = houseMeasurements.width / 4
+
+roofRight.translateX(0.25)
 roof.add(roofRight)
 
 // Roof front and back
