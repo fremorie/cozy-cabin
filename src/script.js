@@ -68,7 +68,7 @@ doorColorTexture.colorSpace = THREE.SRGBColorSpace
 const houseMeasurements = {
     width: 5,
     depth: 6,
-    height: 3.5,
+    height: 3,
 
     doorWidth: 1.5,
     doorHeight: 2.2,
@@ -134,30 +134,54 @@ house.add(walls)
 const cozyWindowSize = 0.8
 const windowGeo = new THREE.PlaneGeometry(cozyWindowSize, cozyWindowSize);
 const windowMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+
 const rimGeometry = new THREE.TorusGeometry(0.55, 0.1, 5, 4)
 const rimMaterial = new THREE.MeshStandardMaterial({color: 0x5C413C, side: THREE.DoubleSide,})
 
+const stickGeometry = new THREE.BoxGeometry(cozyWindowSize, 0.05, 0.1)
 
-function createWindow({x, y, z}) {
+function createWindow({x, y, z, rotation = 0}) {
+    const cozyWindow = new THREE.Object3D()
+
     // Window plane
-    const cozyWindow = new THREE.Mesh(windowGeo, windowMat);
-    cozyWindow.position.set(x, y, z);
-    house.add(cozyWindow);
+    const plane = new THREE.Mesh(windowGeo, windowMat);
+    plane.position.set(x, y, z);
+    plane.rotation.y = rotation
+    cozyWindow.add(plane);
 
     // Light
     const rectLight = new THREE.RectAreaLight(0xffaa55, 5, cozyWindowSize, cozyWindowSize);
-    rectLight.position.copy(cozyWindow.position);
+    rectLight.position.copy(plane.position);
     rectLight.position.z += 0.01
-    house.add(rectLight);
+    rectLight.position.x += 0.01
+    rectLight.position.y += 0.01
+    rectLight.rotation.y = rotation
+    cozyWindow.add(rectLight);
 
     // Rim
     const rim = new THREE.Mesh(rimGeometry, rimMaterial)
     rim.position.set(x, y, z)
     rim.rotation.z = Math.PI / 4
-    house.add(rim)
+    rim.rotation.y = rotation
+    cozyWindow.add(rim)
+
+    // Cross
+    const stick1 = new THREE.Mesh(stickGeometry, rimMaterial)
+    stick1.position.set(x, y + 0.05, z)
+    stick1.rotation.y = rotation
+    cozyWindow.add(stick1)
+
+    const stick2 = new THREE.Mesh(stickGeometry, rimMaterial)
+    stick2.position.set(x, y, z)
+    stick2.rotation.z = Math.PI / 2
+    stick2.rotation.y = rotation
+    cozyWindow.add(stick2)
+
+    house.add(cozyWindow)
 }
 
 const cozyWindows = [
+    // Front windows
     {
         x: houseMeasurements.width / 2 - 0.9,
         y: 1.55,
@@ -167,6 +191,31 @@ const cozyWindows = [
         x: - houseMeasurements.width / 2 + 0.9,
         y: 1.55,
         z: houseMeasurements.depth / 2 + 0.01,
+    },
+    {
+        x: 0,
+        y: houseMeasurements.height + roofMeasurements.height / 2 - cozyWindowSize / 2,
+        z: houseMeasurements.depth / 2 + 0.01,
+    },
+
+    // Right side windows
+    {
+        x: houseMeasurements.width / 2 + 0.01,
+        y: 1.55,
+        z: houseMeasurements.depth / 2 - 0.9,
+        rotation: Math.PI / 2,
+    },
+    {
+        x: houseMeasurements.width / 2 + 0.01,
+        y: 1.55,
+        z: - houseMeasurements.depth / 2 + 0.9,
+        rotation: Math.PI / 2,
+    },
+    {
+        x: houseMeasurements.width / 2 + 0.01,
+        y: 1.55,
+        z: 0,
+        rotation: Math.PI / 2,
     },
 ]
 
