@@ -25,18 +25,18 @@ const axesHelper = new THREE.AxesHelper(10)
 const textureLoader = new THREE.TextureLoader()
 
 // Tree trunks
-const trunkColorTexture = textureLoader.load('/textures/trees/pine/pine_bark_diff_1k.jpg')
-const trunkARMTexture = textureLoader.load('/textures/trees/pine/pine_bark_arm_1k.jpg')
-const trunkNormalTexture = textureLoader.load('/textures/trees/pine/pine_bark_nor_gl_1k.jpg')
-const trunkDisplacementTexture = textureLoader.load('/textures/trees/pine/pine_bark_disp_1k.jpg')
+const trunkColorTexture = textureLoader.load('textures/trees/pine/pine_bark_diff_1k.jpg')
+const trunkARMTexture = textureLoader.load('textures/trees/pine/pine_bark_arm_1k.jpg')
+const trunkNormalTexture = textureLoader.load('textures/trees/pine/pine_bark_nor_gl_1k.jpg')
+const trunkDisplacementTexture = textureLoader.load('textures/trees/pine/pine_bark_disp_1k.jpg')
 
 trunkColorTexture.colorSpace = THREE.SRGBColorSpace
 
 // Snowy pines
-const treeColorTexture = textureLoader.load('/textures/trees/snow/snow_03_diff_1k.jpg')
-const treeARMTexture = textureLoader.load('/textures/trees/snow/snow_03_arm_1k.jpg')
-const treeNormalTexture = textureLoader.load('/textures/trees/snow/snow_03_nor_gl_1k.jpg')
-const treeDisplacementTexture = textureLoader.load('/textures/trees/snow/snow_03_disp_1k.jpg')
+const treeColorTexture = textureLoader.load('textures/trees/snow/snow_03_diff_1k.jpg')
+const treeARMTexture = textureLoader.load('textures/trees/snow/snow_03_arm_1k.jpg')
+const treeNormalTexture = textureLoader.load('textures/trees/snow/snow_03_nor_gl_1k.jpg')
+const treeDisplacementTexture = textureLoader.load('textures/trees/snow/snow_03_disp_1k.jpg')
 
 treeColorTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -58,12 +58,12 @@ treeDisplacementTexture.wrapT = THREE.RepeatWrapping
 
 
 // Floor
-const floorAlphaTexture = textureLoader.load('/textures/floor/alpha.webp')
+const floorAlphaTexture = textureLoader.load('textures/floor/alpha.webp')
 
-const floorColorTexture = textureLoader.load('/textures/floor/snow/snow_02_diff_1k.jpg')
-const floorARMTexture = textureLoader.load('/textures/floor/snow/snow_02_arm_1k.jpg')
-const floorNormalTexture = textureLoader.load('/textures/floor/snow/snow_02_nor_gl_1k.jpg')
-const floorDisplacementTexture = textureLoader.load('/textures/floor/snow/snow_02_disp_1k.jpg')
+const floorColorTexture = textureLoader.load('textures/floor/snow/snow_02_diff_1k.jpg')
+const floorARMTexture = textureLoader.load('textures/floor/snow/snow_02_arm_1k.jpg')
+const floorNormalTexture = textureLoader.load('textures/floor/snow/snow_02_nor_gl_1k.jpg')
+const floorDisplacementTexture = textureLoader.load('textures/floor/snow/snow_02_disp_1k.jpg')
 
 const FLOOR_TEXTURES = [
     floorColorTexture,
@@ -81,10 +81,10 @@ FLOOR_TEXTURES.forEach(texture => {
 })
 
 // Walls
-const wallColorTexture = textureLoader.load('/textures/walls/shutter/wood_shutter_diff_1k.jpg')
-const wallARMTexture = textureLoader.load('/textures/walls/shutter/wood_shutter_arm_1k.jpg')
-const wallNormalTexture = textureLoader.load('/textures/walls/shutter/wood_shutter_nor_gl_1k.jpg')
-const wallDisplacementTexture = textureLoader.load('/textures/shutter/wood_shutter_disp_1k.jpg')
+const wallColorTexture = textureLoader.load('textures/walls/shutter/wood_shutter_diff_1k.jpg')
+const wallARMTexture = textureLoader.load('textures/walls/shutter/wood_shutter_arm_1k.jpg')
+const wallNormalTexture = textureLoader.load('textures/walls/shutter/wood_shutter_nor_gl_1k.jpg')
+const wallDisplacementTexture = textureLoader.load('textures/shutter/wood_shutter_disp_1k.jpg')
 
 wallColorTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -101,18 +101,18 @@ wallDisplacementTexture.center.set(0.5, 0.5)
 wallDisplacementTexture.rotation = Math.PI / 2
 
 // Rim
-const rimColorTexture = textureLoader.load('/textures/rim/plywood_diff_1k.jpg')
-const rimARMTexture = textureLoader.load('/textures/rim/plywood_arm_1k.jpg')
-const rimNormalTexture = textureLoader.load('/textures/rim/plywood_nor_gl_1k.jpg')
-const rimDisplacementTexture = textureLoader.load('/textures/rim/plywood_disp_1k.jpg')
+const rimColorTexture = textureLoader.load('textures/rim/plywood_diff_1k.jpg')
+const rimARMTexture = textureLoader.load('textures/rim/plywood_arm_1k.jpg')
+const rimNormalTexture = textureLoader.load('textures/rim/plywood_nor_gl_1k.jpg')
+const rimDisplacementTexture = textureLoader.load('textures/rim/plywood_disp_1k.jpg')
 
 rimColorTexture.colorSpace = THREE.SRGBColorSpace
 
 // Roof
-const roofColorTexture = textureLoader.load('/textures/roof/reeds/reed_roof_03_diff_1k.jpg')
-const roofARMTexture = textureLoader.load('/textures/roof/reeds/reed_roof_03_arm_1k.jpg')
-const roofNormalTexture = textureLoader.load('/textures/roof/reeds/reed_roof_03_nor_gl_1k.jpg')
-const roofDisplacementTexture = textureLoader.load('/textures/roof/reeds/reed_roof_03_disp_1k.jpg')
+const roofColorTexture = textureLoader.load('textures/roof/reeds/reed_roof_03_diff_1k.jpg')
+const roofARMTexture = textureLoader.load('textures/roof/reeds/reed_roof_03_arm_1k.jpg')
+const roofNormalTexture = textureLoader.load('textures/roof/reeds/reed_roof_03_nor_gl_1k.jpg')
+const roofDisplacementTexture = textureLoader.load('textures/roof/reeds/reed_roof_03_disp_1k.jpg')
 
 roofColorTexture.center.set(0.5, 0.5)
 roofColorTexture.rotation = Math.PI / 2
@@ -129,13 +129,13 @@ roofDisplacementTexture.rotation = Math.PI / 2
 roofColorTexture.colorSpace = THREE.SRGBColorSpace
 
 // Door
-const doorColorTexture = textureLoader.load('/textures/door/color.webp')
-const doorAlphaTexture = textureLoader.load('/textures/door/alpha.webp')
-const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.webp')
-const doorHeightTexture = textureLoader.load('/textures/door/height.webp')
-const doorNormalTexture = textureLoader.load('/textures/door/normal.webp')
-const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.webp')
-const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.webp')
+const doorColorTexture = textureLoader.load('textures/door/color.webp')
+const doorAlphaTexture = textureLoader.load('textures/door/alpha.webp')
+const doorAmbientOcclusionTexture = textureLoader.load('textures/door/ambientOcclusion.webp')
+const doorHeightTexture = textureLoader.load('textures/door/height.webp')
+const doorNormalTexture = textureLoader.load('textures/door/normal.webp')
+const doorMetalnessTexture = textureLoader.load('textures/door/metalness.webp')
+const doorRoughnessTexture = textureLoader.load('textures/door/roughness.webp')
 
 doorColorTexture.colorSpace = THREE.SRGBColorSpace
 

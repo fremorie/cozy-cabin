@@ -1,7 +1,7 @@
 import restart from 'vite-plugin-restart'
 
 export default {
-    base: '/cozy-cabin',
+    base: '/cozy-cabin/',
     root: 'src/',
     publicDir: '../static/',
     server:
