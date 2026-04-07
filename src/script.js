@@ -19,6 +19,18 @@ const axesHelper = new THREE.AxesHelper(10)
 scene.add(axesHelper)
 
 /**
+ * Textures
+ */
+const textureLoader = new THREE.TextureLoader()
+
+// Walls
+const wallColorTexture = textureLoader.load('/textures/walls/wood_planks_diff_1k.jpg')
+const wallARMTexture = textureLoader.load('/textures/walls/wood_planks_arm_1k.jpg')
+const wallNormalTexture = textureLoader.load('/textures/walls/wood_planks_nor_gl_1k.jpg')
+
+wallColorTexture.colorSpace = THREE.SRGBColorSpace
+
+/**
  * House
  */
 const houseMeasurements = {
@@ -61,7 +73,13 @@ const walls = new THREE.Mesh(
         houseMeasurements.height,
         houseMeasurements.depth,
     ),
-    new THREE.MeshStandardMaterial(),
+    new THREE.MeshStandardMaterial({
+        map: wallColorTexture,
+        aoMap: wallARMTexture,
+        roughnessMap: wallARMTexture,
+        metalnessMap: wallARMTexture,
+        normalMap: wallNormalTexture,
+    }),
 )
 walls.position.y = houseMeasurements.height / 2
 house.add(walls)
@@ -71,7 +89,7 @@ const roof = new THREE.Object3D()
 
 const roofLeft = new THREE.Mesh(
     new THREE.BoxGeometry(roofMeasurements.plateWidth, roofMeasurements.plateHeight, roofMeasurements.plateDepth),
-    new THREE.MeshStandardMaterial({ color: '#4a3b2a' })
+    new THREE.MeshStandardMaterial()
 )
 
 roofLeft.position.y = houseMeasurements.height + roofMeasurements.height / 2
@@ -85,7 +103,6 @@ roofRight.position.x = houseMeasurements.width / 4
 roof.add(roofRight)
 
 // Roof front and back
-
 const vertices = new Float32Array([
     // left side
     -houseMeasurements.width / 2, 0, -houseMeasurements.depth / 2,   // bottom left
@@ -109,11 +126,34 @@ bufferGeometry.setAttribute(
     new THREE.BufferAttribute(vertices, 3)
 )
 bufferGeometry.setIndex(indices)
+const uvs = new Float32Array([
+    // front triangle
+    0, 0,   // bottom left
+    1, 0,   // bottom right
+    0.5, 1, // top
+
+    // back triangle
+    0, 0,
+    1, 0,
+    0.5, 1,
+])
+
+bufferGeometry.setAttribute(
+    'uv',
+    new THREE.BufferAttribute(uvs, 2)
+)
 bufferGeometry.computeVertexNormals()
 
 const roofFrontAndBack = new THREE.Mesh(
     bufferGeometry,
-    new THREE.MeshStandardMaterial({ side: THREE.DoubleSide })
+    new THREE.MeshStandardMaterial({
+        side: THREE.DoubleSide,
+        map: wallColorTexture,
+        aoMap: wallARMTexture,
+        roughnessMap: wallARMTexture,
+        metalnessMap: wallARMTexture,
+        normalMap: wallNormalTexture,
+    })
 )
 
 roofFrontAndBack.position.y = houseMeasurements.height
