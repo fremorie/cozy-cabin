@@ -186,12 +186,23 @@ const treeCount = 20
 for (let i = 0; i < treeCount; i++) {
     const tree = createPineTree()
 
+    const angle = Math.random() * Math.PI * 2
+    const houseOuterRadius = Math.sqrt(houseMeasurements.width ** 2 + houseMeasurements.depth ** 2) / 2
+    const radius = (houseOuterRadius + 3) + Math.random() * 10
+    let x = Math.sin(angle) * radius
+    let z = Math.cos(angle) * radius
+
+    // Keep the first quadrant empty
+    if (x > 0) {
+        z = -Math.abs(z)
+    }
+
     tree.scale.setScalar(0.8 + Math.random() * 0.5)
     tree.rotation.y = Math.random() * Math.PI
     tree.position.set(
-        (Math.random() - 0.5) * 20,
+        x,
         0,
-        (Math.random() - 0.5) * 20
+        z,
     )
 
     scene.add(tree)
