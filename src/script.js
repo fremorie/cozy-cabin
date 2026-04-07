@@ -353,6 +353,41 @@ door.position.y = houseMeasurements.doorHeight / 2
 
 house.add(door)
 
+// Door rim
+const doorRimGroup = new THREE.Group()
+const doorRimGeometry = new THREE.BoxGeometry(0.2, houseMeasurements.doorHeight + 0.2, 0.2)
+const doorRimMaterial = new THREE.MeshStandardMaterial({color: 0x5C413C, side: THREE.DoubleSide,})
+
+const doorRimLeft = new THREE.Mesh(doorRimGeometry, doorRimMaterial)
+doorRimLeft.position.set(
+    -houseMeasurements.doorWidth / 2 + 0.1,
+    houseMeasurements.doorHeight / 2,
+    houseMeasurements.depth / 2
+)
+doorRimGroup.add(doorRimLeft)
+
+const doorRimRight = new THREE.Mesh(doorRimGeometry, doorRimMaterial)
+doorRimRight.position.set(
+    houseMeasurements.doorWidth / 2 - 0.1,
+    houseMeasurements.doorHeight / 2,
+    houseMeasurements.depth / 2
+)
+doorRimGroup.add(doorRimRight)
+
+const doorRimTop = new THREE.Mesh(
+    new THREE.BoxGeometry(houseMeasurements.doorWidth - 0.4, 0.2, 0.2),
+    doorRimMaterial,
+)
+doorRimTop.position.set(
+    0,
+    houseMeasurements.doorHeight,
+    houseMeasurements.depth / 2
+)
+doorRimGroup.add(doorRimTop)
+
+house.add(doorRimGroup)
+
+
 /**
  * Lights
  */
