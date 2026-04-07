@@ -54,6 +54,26 @@ const wallDisplacementTexture = textureLoader.load('/textures/walls/wood_planks_
 
 wallColorTexture.colorSpace = THREE.SRGBColorSpace
 
+// Roof
+const roofColorTexture = textureLoader.load('/textures/roof/clay_roof_tiles_03_diff_1k.jpg')
+const roofARMTexture = textureLoader.load('/textures/roof/clay_roof_tiles_03_arm_1k.jpg')
+const roofNormalTexture = textureLoader.load('/textures/roof/clay_roof_tiles_03_nor_gl_1k.jpg')
+const roofDisplacementTexture = textureLoader.load('/textures/roof/clay_roof_tiles_03_disp_1k.jpg')
+
+roofColorTexture.center.set(0.5, 0.5)
+roofColorTexture.rotation = Math.PI / 2
+
+roofARMTexture.center.set(0.5, 0.5)
+roofARMTexture.rotation = Math.PI / 2
+
+roofNormalTexture.center.set(0.5, 0.5)
+roofNormalTexture.rotation = Math.PI / 2
+
+roofDisplacementTexture.center.set(0.5, 0.5)
+roofDisplacementTexture.rotation = Math.PI / 2
+
+roofColorTexture.colorSpace = THREE.SRGBColorSpace
+
 // Door
 const doorColorTexture = textureLoader.load('/textures/door/rough_pine_door_diff_1k.jpg')
 const doorARMTexture = textureLoader.load('/textures/door/rough_pine_door_arm_1k.jpg')
@@ -226,9 +246,18 @@ for (const cozyWindow of cozyWindows) {
 // Roof
 const roof = new THREE.Object3D()
 
+const roofMaterial = new THREE.MeshStandardMaterial({
+    side: THREE.DoubleSide,
+    map: roofColorTexture,
+    aoMap: roofARMTexture,
+    roughnessMap: roofARMTexture,
+    metalnessMap: roofARMTexture,
+    normalMap: roofNormalTexture,
+})
+
 const roofLeft = new THREE.Mesh(
     new THREE.BoxGeometry(roofMeasurements.plateWidth, roofMeasurements.plateHeight, roofMeasurements.plateDepth),
-    wallsMaterial,
+    roofMaterial,
 )
 
 roofLeft.position.y = houseMeasurements.height + roofMeasurements.height / 2
@@ -238,7 +267,7 @@ roof.add(roofLeft)
 
 const roofRight = new THREE.Mesh(
     new THREE.BoxGeometry(roofMeasurements.plateWidth, roofMeasurements.plateHeight, roofMeasurements.plateDepth + 0.02),
-    wallsMaterial,
+    roofMaterial,
 )
 
 roofRight.position.y = houseMeasurements.height + roofMeasurements.height / 2
