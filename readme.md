@@ -33,3 +33,4 @@ npm run build
 | Tree trunks | https://polyhaven.com/a/pine_bark |
 | Trees | https://polyhaven.com/a/snow_03 |
 | Door | https://3dtextures.me/2019/04/16/door-wood-001/ |
+| Snow particles | https://www.kenney.nl/assets/particle-pack |
