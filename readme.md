@@ -21,3 +21,15 @@ npm run dev
 # Build for production in the dist/ directory
 npm run build
 ```
+
+## Textures
+
+| Object | Link |
+| -- | -- |
+| Walls | https://polyhaven.com/a/wood_shutter |
+| Roof | https://polyhaven.com/a/reed_roof_03 |
+| Window rims | https://polyhaven.com/a/plywood |
+| Snow (ground) | https://polyhaven.com/a/snow_02 |
+| Tree trunks | https://polyhaven.com/a/pine_bark |
+| Trees | https://polyhaven.com/a/snow_03 |
+| Door | https://3dtextures.me/2019/04/16/door-wood-001/ |
