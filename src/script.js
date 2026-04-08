@@ -24,6 +24,9 @@ const axesHelper = new THREE.AxesHelper(10)
  */
 const textureLoader = new THREE.TextureLoader()
 
+// Snowflake
+const snowflakeTexture = textureLoader.load('textures/weather/snowflake.png')
+
 // Tree trunks
 const trunkColorTexture = textureLoader.load('textures/trees/pine/pine_bark_diff_1k.jpg')
 const trunkARMTexture = textureLoader.load('textures/trees/pine/pine_bark_arm_1k.jpg')
@@ -161,9 +164,11 @@ const roofMeasurements = {
     plateWidth: Math.sqrt((houseMeasurements.width / 2) ** 2 + roofHeight ** 2) + 0.5
 }
 
+const SCENE_WIDTH = 40
+
 // Floor
 const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(40, 40, 200, 200),
+    new THREE.PlaneGeometry(SCENE_WIDTH, SCENE_WIDTH, 200, 200),
     new THREE.MeshStandardMaterial({
         transparent: true,
         alphaMap: floorAlphaTexture,
@@ -324,7 +329,6 @@ function createWindow({x, y, z, rotation = 0}) {
     rectLight.position.x += 0.01
     rectLight.position.y += 0.01
     rectLight.rotation.y = rotation
-    rectLight.castShadow = true
     cozyWindow.add(rectLight);
 
     // Rim
@@ -564,23 +568,48 @@ scene.fog = new THREE.Fog('#191D3B', 10, 40)
 /**
  * Snow
  */
-const snowSpheres = [];
-const snowCount = 1000;
-const geometry = new THREE.SphereGeometry(0.05, 6, 6);
-const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
 
-for (let i = 0; i < snowCount; i++) {
-    const sphere = new THREE.Mesh(geometry, material);
+const particlesGeometry = new THREE.BufferGeometry()
+const snowflakeCount = 50000
+const snowflakePositions = new Float32Array(snowflakeCount * 3)
 
-    sphere.position.set(
-        (Math.random() - 0.5) * 50,
-        Math.random() * 50,
-        (Math.random() - 0.5) * 50
-    );
+for (let i = 0; i < snowflakeCount; i++) {
+    const i3 = i * 3
 
-    scene.add(sphere);
-    snowSpheres.push(sphere);
+    // Keep snowflake inside the circle (R = 20)
+    const planeRadius = SCENE_WIDTH / 2 + 3 // just so that they are slightly outside the lit area
+    const angle = Math.random() * Math.PI * 2
+    const radius = Math.sqrt(Math.random()) * planeRadius
+
+    const x = Math.sin(angle) * radius
+    const z = Math.cos(angle) * radius
+
+    // x
+    // Random number between [-20, 20]
+    snowflakePositions[i3] = x
+    // y
+    // Always positive: we don't want underground snowflakes
+    snowflakePositions[i3 + 1] = Math.random() * 20
+    // z
+    // Random number between [-20, 20]
+    snowflakePositions[i3 + 2] = z
 }
+
+particlesGeometry.setAttribute(
+    'position',
+    new THREE.BufferAttribute(snowflakePositions, 3)
+)
+
+const particlesMaterial = new THREE.PointsMaterial({
+    size: 0.05,
+    sizeAttenuation: true,
+    alphaMap: snowflakeTexture,
+    transparent: true,
+    depthWrite: false,
+})
+
+const particles = new THREE.Points(particlesGeometry, particlesMaterial)
+scene.add(particles)
 
 /**
  * Sizes
@@ -667,22 +696,21 @@ directionalLight.shadow.camera.far = 80
  * Animate
  */
 
-function animateSnowSpheres() {
-    snowSpheres.forEach(s => {
-        s.position.y -= 0.1; // falling speed
-        s.position.x -= Math.random() * 0.01
-        s.position.z += Math.random() * 0.01
+function animateSnowflakes(elapsedTime) {
+    particles.position.z = Math.sin(elapsedTime) * 0.05
+    particles.position.x = Math.cos(elapsedTime) * 0.05
 
-        // reset
-        if (s.position.y < 0) {
-            s.position.set(
-                (Math.random() - 0.5) * 50,
-                Math.random() * 50,
-                (Math.random() - 0.5) * 50
-            );
+    for (let i = 0; i < snowflakeCount; i++) {
+        const i3 = i * 3
+        particlesGeometry.attributes.position.array[i3 + 1] -= 0.01
 
+        const y = particlesGeometry.attributes.position.array[i3 + 1]
+
+        if (y <= 1) {
+            particlesGeometry.attributes.position.array[i3 + 1] = 20 + Math.random()
         }
-    });
+    }
+    particlesGeometry.attributes.position.needsUpdate = true
 }
 
 const timer = new THREE.Timer()
@@ -692,7 +720,7 @@ const tick = () =>
     // Timer
     timer.update()
     const elapsedTime = timer.getElapsed()
-    animateSnowSpheres()
+    animateSnowflakes(elapsedTime)
 
     // Update controls
     controls.update()
