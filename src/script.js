@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons'
-import GUI from 'lil-gui'
-import {debug} from "three/tsl";
+import { GLTFLoader } from 'three/addons'
 
 /**
  * Base
@@ -18,6 +17,41 @@ const scene = new THREE.Scene()
 // Axes helper
 const axesHelper = new THREE.AxesHelper(10)
 // scene.add(axesHelper)
+
+/**
+ * Models
+ */
+const gltfLoader = new GLTFLoader()
+
+let mixer = null
+
+let walkingFoxAction = null
+let lookAroundFoxAction = null
+let runningFoxAction = null
+
+let gltfScene = null
+let gltfAnimations = null
+
+gltfLoader.load(
+    'models/Fox/glTF/Fox.gltf',
+    (gltf) => {
+        mixer = new THREE.AnimationMixer(gltf.scene)
+        walkingFoxAction = mixer.clipAction(gltf.animations[1])
+        lookAroundFoxAction = mixer.clipAction(gltf.animations[0])
+        runningFoxAction = mixer.clipAction(gltf.animations[2])
+
+        walkingFoxAction.play()
+
+        gltf.scene.scale.setScalar(0.015)
+        gltf.scene.position.set(-20,0,8)
+        gltf.scene.rotation.y = Math.PI / 2
+
+        gltfScene = gltf.scene
+        gltfAnimations = gltf.animations
+
+        scene.add(gltf.scene)
+    },
+)
 
 /**
  * Textures
@@ -715,12 +749,64 @@ function animateSnowflakes(elapsedTime) {
 
 const timer = new THREE.Timer()
 
+let foxStoppedTime = null
+
+// State: 'walking' | 'idle'
+let foxState = 'walking'
+let hasStopped = false
+
+let foxAngle = - Math.PI / 2
+let foxRadius = 10
+const foxAngularSpeed = 0.2 // radians per second
+
 const tick = () =>
 {
     // Timer
     timer.update()
     const elapsedTime = timer.getElapsed()
+    const deltaTime = timer.getDelta()
     animateSnowflakes(elapsedTime)
+
+    const idleTimeDone = foxStoppedTime && elapsedTime - foxStoppedTime > 2.5
+
+    // Update mixer
+    if (mixer !== null) {
+        mixer.update(deltaTime)
+
+        const reachedStopPoint = gltfScene.position.x >= 3
+
+        if (foxState === 'walking' && reachedStopPoint && !hasStopped) {
+            walkingFoxAction.crossFadeTo(lookAroundFoxAction, 1, false)
+            lookAroundFoxAction.reset().play()
+            foxStoppedTime = elapsedTime
+            foxState = 'idle'
+            hasStopped = true
+        } else if (foxState === 'idle' && idleTimeDone) {
+            lookAroundFoxAction.crossFadeTo(walkingFoxAction, 1, false)
+            walkingFoxAction.reset().play()
+            foxStoppedTime = null
+            foxState = 'walking'
+        }
+    }
+
+    // Update model position
+    if (gltfScene !== null) {
+        if (foxState === 'walking') {
+            const prevX = gltfScene.position.x
+            const prevZ = gltfScene.position.z
+
+            // Move on the circle
+            foxAngle -= deltaTime * foxAngularSpeed
+            gltfScene.position.x = Math.cos(foxAngle) * foxRadius
+            gltfScene.position.z = Math.sin(foxAngle) * foxRadius
+
+            // Compute direction of movement
+            const dx = gltfScene.position.x - prevX
+            const dz = gltfScene.position.z - prevZ
+
+            gltfScene.rotation.y = Math.atan2(dx, dz)
+        }
+    }
 
     // Update controls
     controls.update()
