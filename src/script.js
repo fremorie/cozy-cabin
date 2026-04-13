@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons'
-import { GLTFLoader } from 'three/addons'
+import { GLTFLoader, DRACOLoader } from 'three/addons'
 
 /**
  * Base
@@ -21,7 +21,11 @@ const axesHelper = new THREE.AxesHelper(10)
 /**
  * Models
  */
+const dracoLoader = new DRACOLoader()
+dracoLoader.setDecoderPath('draco/')
+
 const gltfLoader = new GLTFLoader()
+gltfLoader.setDRACOLoader(dracoLoader)
 
 let mixer = null
 
