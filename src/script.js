@@ -37,6 +37,50 @@ let gltfScene = null
 let gltfAnimations = null
 
 gltfLoader.load(
+    'models/Pinetree/pine.glb',
+    (gltf) => {
+        const pineTreeModel = gltf.scene
+
+        const treeCount = 20
+        const pineTreeGroup = new THREE.Group()
+
+        for (let i = 0; i < treeCount; i++) {
+            const tree = pineTreeModel.clone()
+
+            const angle = Math.random() * Math.PI * 2
+            const houseOuterRadius = Math.sqrt(houseMeasurements.width ** 2 + houseMeasurements.depth ** 2) / 2
+            const radius = (houseOuterRadius + 3) + Math.random() * 10
+            let x = Math.sin(angle) * radius
+            let z = Math.cos(angle) * radius
+
+            // Keep the first quadrant empty
+            if (x > 0) {
+                z = -Math.abs(z)
+            }
+
+            const scale = 0.12 + Math.random() * 0.08
+            tree.scale.setScalar(scale)
+            tree.rotation.y = Math.random() * Math.PI
+            tree.position.set(
+                x,
+                0,
+                z,
+            )
+
+            pineTreeGroup.add(tree)
+        }
+
+        scene.add(pineTreeGroup)
+
+        for (const pinetree of pineTreeGroup.children) {
+            for (const pinetreePart of pinetree.children) {
+                pinetreePart.castShadow = true
+            }
+        }
+    }
+)
+
+gltfLoader.load(
     'models/Fox/glTF/Fox.gltf',
     (gltf) => {
         mixer = new THREE.AnimationMixer(gltf.scene)
@@ -224,88 +268,6 @@ const floor = new THREE.Mesh(
 floor.rotation.x = - Math.PI / 2
 
 scene.add(floor)
-
-// Trees
-
-// Leaves (stacked cones)
-const coneMaterial = new THREE.MeshStandardMaterial({
-    map: treeColorTexture,
-    aoMap: treeARMTexture,
-    roughnessMap: treeARMTexture,
-    metalnessMap: treeARMTexture,
-    normalMap: treeNormalTexture,
-})
-
-const trunkMaterial = new THREE.MeshStandardMaterial({
-    map: trunkColorTexture,
-    aoMap: trunkARMTexture,
-    roughnessMap: trunkARMTexture,
-    metalnessMap: trunkARMTexture,
-    normalMap: trunkNormalTexture,
-})
-
-const trunkGeometry = new THREE.CylinderGeometry(0.1, 0.15, 1, 8)
-const bigConeGeometry = new THREE.ConeGeometry(0.8, 1.5, 8)
-const mediumConeGeometry = new THREE.ConeGeometry(0.6, 1.2, 8)
-const smallConeGeometry = new THREE.ConeGeometry(0.4, 1.0, 8)
-
-function createPineTree() {
-    const group = new THREE.Group()
-
-    // Trunk
-    const trunk = new THREE.Mesh(
-        trunkGeometry,
-        trunkMaterial,
-    )
-    trunk.position.y = 0.5
-    group.add(trunk)
-
-    const cone1 = new THREE.Mesh(bigConeGeometry, coneMaterial)
-    cone1.position.y = 1.5
-
-    const cone2 = new THREE.Mesh(mediumConeGeometry, coneMaterial)
-    cone2.position.y = 2.2
-
-    const cone3 = new THREE.Mesh(smallConeGeometry, coneMaterial)
-    cone3.position.y = 2.8
-
-    group.add(cone1, cone2, cone3)
-
-    cone1.position.x += (Math.random() - 0.5) * 0.1
-    cone2.scale.y *= 0.9 + Math.random() * 0.2
-
-    return group
-}
-
-const treeCount = 20
-const pineTreeGroup = new THREE.Group()
-
-for (let i = 0; i < treeCount; i++) {
-    const tree = createPineTree()
-
-    const angle = Math.random() * Math.PI * 2
-    const houseOuterRadius = Math.sqrt(houseMeasurements.width ** 2 + houseMeasurements.depth ** 2) / 2
-    const radius = (houseOuterRadius + 3) + Math.random() * 10
-    let x = Math.sin(angle) * radius
-    let z = Math.cos(angle) * radius
-
-    // Keep the first quadrant empty
-    if (x > 0) {
-        z = -Math.abs(z)
-    }
-
-    tree.scale.setScalar(0.8 + Math.random() * 0.8)
-    tree.rotation.y = Math.random() * Math.PI
-    tree.position.set(
-        x,
-        0,
-        z,
-    )
-
-    pineTreeGroup.add(tree)
-}
-
-scene.add(pineTreeGroup)
 
 // House container
 const house = new THREE.Group()
@@ -712,13 +674,6 @@ roofFrontAndBack.castShadow = true
 roofFrontAndBack.receiveShadow = true
 floor.receiveShadow = true
 doorRimTop.castShadow = true
-
-for (const pinetree of pineTreeGroup.children) {
-    for (const pinetreePart of pinetree.children) {
-        pinetreePart.castShadow = true
-        pinetreePart.receiveShadow = true
-    }
-}
 
 // Optimize performance
 directionalLight.shadow.mapSize.width = 256
