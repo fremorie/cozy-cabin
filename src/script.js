@@ -1,12 +1,14 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons'
+import GUI from 'lil-gui'
 import { GLTFLoader, DRACOLoader } from 'three/addons'
 
 /**
  * Base
  */
 // Debug
-// const gui = new GUI()
+const gui = new GUI()
+gui.hide()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -17,6 +19,22 @@ const scene = new THREE.Scene()
 // Axes helper
 const axesHelper = new THREE.AxesHelper(10)
 // scene.add(axesHelper)
+
+/**
+ * Update all materials
+ */
+const updateAllMaterials = () =>
+{
+    scene.traverse((child) =>
+    {
+        if(child.isMesh)
+        {
+            // Activate shadow here
+            child.castShadow = true
+            child.receiveShadow = true
+        }
+    })
+}
 
 /**
  * Models
@@ -72,11 +90,7 @@ gltfLoader.load(
 
         scene.add(pineTreeGroup)
 
-        for (const pinetree of pineTreeGroup.children) {
-            for (const pinetreePart of pinetree.children) {
-                pinetreePart.castShadow = true
-            }
-        }
+        updateAllMaterials()
     }
 )
 
@@ -330,6 +344,7 @@ function createWindow({x, y, z, rotation = 0}) {
     rectLight.position.y += 0.01
     rectLight.rotation.y = rotation
     cozyWindow.add(rectLight);
+    rectLight.castShadow = true
 
     // Rim
     const rim = new THREE.Mesh(rimGeometry, rimMaterial)
@@ -555,9 +570,22 @@ const ambientLight = new THREE.AmbientLight('#ffffff', 0.7)
 scene.add(ambientLight)
 
 // Directional light
-const directionalLight = new THREE.DirectionalLight('#F5F0BF', 1.5)
-directionalLight.position.set(10, 5, 3)
+const directionalLight = new THREE.DirectionalLight('#F5F0BF', 4.4)
+directionalLight.position.set(20, 5.5, 1.6)
 scene.add(directionalLight)
+
+gui.add(directionalLight, 'intensity')
+    .min(0)
+    .max(10)
+    .step(0.001)
+    .name('Light intensity')
+gui.add(directionalLight.position, 'x').min(-20).max(20).step(0.001).name('Light X')
+gui.add(directionalLight.position, 'y').min(-20).max(20).step(0.001).name('Light Y')
+gui.add(directionalLight.position, 'z').min(-20).max(20).step(0.001).name('Light Z')
+gui.add(directionalLight.shadow, 'normalBias').min(-0.05).max(0.05).step(0.001)
+gui.add(directionalLight.shadow, 'bias').min(-0.05).max(0.05).step(0.001)
+
+directionalLight.shadow.bias = -0.004
 
 /**
  * Fog
@@ -652,7 +680,8 @@ controls.enableDamping = true
  * Renderer
  */
 const renderer = new THREE.WebGLRenderer({
-    canvas: canvas
+    canvas: canvas,
+    antialias: true,
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -661,7 +690,22 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  * Shadows
  */
 renderer.shadowMap.enabled = true
-renderer.shadowMap.type = THREE.PCFShadowMap
+renderer.shadowMap.type = THREE.PCFSoftShadowMap
+
+// Tone mapping
+renderer.toneMapping = THREE.ReinhardToneMapping
+renderer.toneMappingExposure = 0.892
+
+gui.add(renderer, 'toneMapping', {
+    No: THREE.NoToneMapping,
+    Linera: THREE.LinearToneMapping,
+    Reinhard: THREE.ReinhardToneMapping,
+    Cineon: THREE.CineonToneMapping,
+    ACESFilmic: THREE.ACESFilmicToneMapping,
+})
+
+gui.add(renderer, 'toneMappingExposure').min(0.001).max(10).step(0.001)
+
 
 // Cast and receive
 directionalLight.castShadow = true
@@ -676,14 +720,18 @@ floor.receiveShadow = true
 doorRimTop.castShadow = true
 
 // Optimize performance
-directionalLight.shadow.mapSize.width = 256
-directionalLight.shadow.mapSize.height = 256
-directionalLight.shadow.camera.top = 40
-directionalLight.shadow.camera.right = 40
-directionalLight.shadow.camera.bottom = -40
-directionalLight.shadow.camera.left = -40
-directionalLight.shadow.camera.near = 1
+// How sharp the shadows are
+directionalLight.shadow.mapSize.set(1024, 1024)
+directionalLight.shadow.camera.top = 20
+directionalLight.shadow.camera.right = 20
+directionalLight.shadow.camera.bottom = -20
+directionalLight.shadow.camera.left = -20
+directionalLight.shadow.camera.near = -10
 directionalLight.shadow.camera.far = 80
+
+// Helper
+// const directionalLightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera)
+// scene.add(directionalLightCameraHelper)
 
 /**
  * Animate
