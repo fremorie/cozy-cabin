@@ -595,7 +595,7 @@ scene.fog = new THREE.Fog('#191D3B', 10, 40)
  */
 
 const particlesGeometry = new THREE.BufferGeometry()
-const snowflakeCount = 50000
+const snowflakeCount = 5000
 const snowflakePositions = new Float32Array(snowflakeCount * 3)
 
 for (let i = 0; i < snowflakeCount; i++) {
@@ -625,12 +625,16 @@ particlesGeometry.setAttribute(
     new THREE.BufferAttribute(snowflakePositions, 3)
 )
 
-const particlesMaterial = new THREE.PointsMaterial({
-    size: 0.05,
-    sizeAttenuation: true,
-    alphaMap: snowflakeTexture,
+const particlesMaterial = new THREE.ShaderMaterial({
     transparent: true,
     depthWrite: false,
+    blending: THREE.AdditiveBlending,
+    vertexColors: true,
+    vertexShader: snowVertexShader,
+    fragmentShader: snowFragmentShader,
+    uniforms: {
+        uTexture: { value: snowflakeTexture },
+    },
 })
 
 const particles = new THREE.Points(particlesGeometry, particlesMaterial)
