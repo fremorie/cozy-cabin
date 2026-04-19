@@ -344,7 +344,6 @@ function createWindow({x, y, z, rotation = 0}) {
     rectLight.position.y += 0.01
     rectLight.rotation.y = rotation
     cozyWindow.add(rectLight);
-    rectLight.castShadow = true
 
     // Rim
     const rim = new THREE.Mesh(rimGeometry, rimMaterial)
