@@ -2,6 +2,8 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons'
 import GUI from 'lil-gui'
 import { GLTFLoader, DRACOLoader } from 'three/addons'
+import snowFragmentShader from './shaders/snow/fragment.glsl'
+import snowVertexShader from './shaders/snow/vertex.glsl'
 
 /**
  * Base

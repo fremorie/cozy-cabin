@@ -1,4 +1,5 @@
 import restart from 'vite-plugin-restart'
+import glsl from 'vite-plugin-glsl'
 
 export default {
     base: '/cozy-cabin/',
@@ -17,6 +18,7 @@ export default {
     },
     plugins:
     [
-        restart({ restart: [ '../static/**', ] })
+        restart({ restart: [ '../static/**', ] }),
+        glsl() // Handle shader files
     ],
 }
