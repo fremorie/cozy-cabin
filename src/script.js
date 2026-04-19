@@ -21,28 +21,26 @@ const axesHelper = new THREE.AxesHelper(10)
 // scene.add(axesHelper)
 
 /**
- * Update all materials
+ * Loading manager
  */
-const updateAllMaterials = () =>
-{
-    scene.traverse((child) =>
-    {
-        if(child.isMesh)
-        {
-            // Activate shadow here
-            child.castShadow = true
-            child.receiveShadow = true
-        }
-    })
-}
+const manager = new THREE.LoadingManager(
+    () => {
+        scene.traverse((child) => {
+            if (child.isMesh) {
+                child.castShadow = true
+                child.receiveShadow = true
+            }
+        })
+    }
+);
 
 /**
  * Models
  */
-const dracoLoader = new DRACOLoader()
+const dracoLoader = new DRACOLoader(manager)
 dracoLoader.setDecoderPath('draco/')
 
-const gltfLoader = new GLTFLoader()
+const gltfLoader = new GLTFLoader(manager)
 gltfLoader.setDRACOLoader(dracoLoader)
 
 let mixer = null
@@ -89,8 +87,6 @@ gltfLoader.load(
         }
 
         scene.add(pineTreeGroup)
-
-        updateAllMaterials()
     }
 )
 
@@ -771,7 +767,7 @@ const tick = () =>
     timer.update()
     const elapsedTime = timer.getElapsed()
     const deltaTime = timer.getDelta()
-    animateSnowflakes(elapsedTime)
+    //animateSnowflakes(elapsedTime)
 
     const idleTimeDone = foxStoppedTime && elapsedTime - foxStoppedTime > 2.5
 
