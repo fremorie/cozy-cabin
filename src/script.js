@@ -512,7 +512,6 @@ const door = new THREE.Mesh(
         aoMap: doorAmbientOcclusionTexture,
         displacementMap: doorHeightTexture,
         displacementScale: 0.15,
-        displacementBasis: -0.04,
         roughnessMap: doorRoughnessTexture,
         metalnessMap: doorMetalnessTexture,
         normalMap: doorNormalTexture,
@@ -634,6 +633,8 @@ const particlesMaterial = new THREE.ShaderMaterial({
     fragmentShader: snowFragmentShader,
     uniforms: {
         uTexture: { value: snowflakeTexture },
+
+        uTime: { value: 0 },
     },
 })
 
@@ -691,11 +692,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  * Shadows
  */
 renderer.shadowMap.enabled = true
-renderer.shadowMap.type = THREE.PCFSoftShadowMap
+renderer.shadowMap.type = THREE.PCFShadowMap
 
-// Tone mapping
-renderer.toneMapping = THREE.ReinhardToneMapping
-renderer.toneMappingExposure = 0.892
+// Tone mapping: leave out for now because windows look very bleak when it's on
+// renderer.toneMapping = THREE.ReinhardToneMapping
+// renderer.toneMappingExposure = 0.892
 
 gui.add(renderer, 'toneMapping', {
     No: THREE.NoToneMapping,
@@ -739,20 +740,7 @@ directionalLight.shadow.camera.far = 80
  */
 
 function animateSnowflakes(elapsedTime) {
-    particles.position.z = Math.sin(elapsedTime) * 0.05
-    particles.position.x = Math.cos(elapsedTime) * 0.05
-
-    for (let i = 0; i < snowflakeCount; i++) {
-        const i3 = i * 3
-        particlesGeometry.attributes.position.array[i3 + 1] -= 0.01
-
-        const y = particlesGeometry.attributes.position.array[i3 + 1]
-
-        if (y <= 1) {
-            particlesGeometry.attributes.position.array[i3 + 1] = 20 + Math.random()
-        }
-    }
-    particlesGeometry.attributes.position.needsUpdate = true
+    particlesMaterial.uniforms.uTime.value = elapsedTime
 }
 
 const timer = new THREE.Timer()
@@ -773,7 +761,7 @@ const tick = () =>
     timer.update()
     const elapsedTime = timer.getElapsed()
     const deltaTime = timer.getDelta()
-    //animateSnowflakes(elapsedTime)
+    animateSnowflakes(elapsedTime)
 
     const idleTimeDone = foxStoppedTime && elapsedTime - foxStoppedTime > 2.5
 
