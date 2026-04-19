@@ -19,7 +19,7 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 // Axes helper
-const axesHelper = new THREE.AxesHelper(10)
+// const axesHelper = new THREE.AxesHelper(8)
 // scene.add(axesHelper)
 
 /**
@@ -59,34 +59,61 @@ gltfLoader.load(
     (gltf) => {
         const pineTreeModel = gltf.scene
 
-        const treeCount = 20
+        const treeCount = 30
         const pineTreeGroup = new THREE.Group()
 
+        const positions = []
+
+        const box = new THREE.Box3().setFromObject(pineTreeModel)
+        const size = new THREE.Vector3()
+        box.getSize(size)
+        const baseRadius = Math.max(size.x, size.z) / 2
+
         for (let i = 0; i < treeCount; i++) {
+            let x, z, scale, currentRadius
+            let attempts = 0
+            const maxAttempts = 100
+
+            do {
+                scale = 0.12 + Math.random() * 0.05
+                currentRadius = baseRadius * scale
+
+                const angle = Math.random() * Math.PI * 2
+                const houseOuterRadius = Math.sqrt(houseMeasurements.width ** 2 + houseMeasurements.depth ** 2) / 2
+                const radius = (houseOuterRadius + 3) + Math.random() * 10
+
+                x = Math.sin(angle) * radius
+                z = Math.cos(angle) * radius
+
+                // Keep first quadrant empty
+                if (x > -2) {
+                    z = -Math.abs(z)
+                }
+
+                attempts++
+            } while (
+                positions.some(p => {
+                    const dx = p.x - x
+                    const dz = p.z - z
+                    const distSq = dx * dx + dz * dz
+                    const minDist = p.radius + currentRadius
+
+                    return distSq < minDist * minDist
+                }) &&
+                attempts < maxAttempts
+                )
+
+            positions.push({ x, z, radius: currentRadius })
+
             const tree = pineTreeModel.clone()
-
-            const angle = Math.random() * Math.PI * 2
-            const houseOuterRadius = Math.sqrt(houseMeasurements.width ** 2 + houseMeasurements.depth ** 2) / 2
-            const radius = (houseOuterRadius + 3) + Math.random() * 10
-            let x = Math.sin(angle) * radius
-            let z = Math.cos(angle) * radius
-
-            // Keep the first quadrant empty
-            if (x > 0) {
-                z = -Math.abs(z)
-            }
-
-            const scale = 0.12 + Math.random() * 0.08
             tree.scale.setScalar(scale)
             tree.rotation.y = Math.random() * Math.PI
-            tree.position.set(
-                x,
-                0,
-                z,
-            )
+            tree.position.set(x, 0, z)
 
             pineTreeGroup.add(tree)
         }
+
+        console.log({positions})
 
         scene.add(pineTreeGroup)
     }
@@ -116,7 +143,7 @@ gltfLoader.load(
 /**
  * Textures
  */
-const textureLoader = new THREE.TextureLoader()
+const textureLoader = new THREE.TextureLoader(manager)
 
 // Snowflake
 const snowflakeTexture = textureLoader.load('textures/weather/snowflake.png')
