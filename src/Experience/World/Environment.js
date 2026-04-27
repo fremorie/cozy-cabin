@@ -14,6 +14,7 @@ export default class Environment {
         }
 
         this.setSunLight()
+        this.setAmbientLight()
     }
 
     setSunLight() {

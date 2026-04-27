@@ -1,6 +1,7 @@
 import Experience from '../Experience.js'
 import Environment from './Environment.js'
 import Floor from './Floor.js'
+import PineTree from './PineTree.js'
 
 export default class World {
     constructor() {
@@ -13,6 +14,7 @@ export default class World {
             console.log('ready')
             // Setup
             this.floor = new Floor()
+            this.pineTree = new PineTree()
             this.environment = new Environment()
         })
     }

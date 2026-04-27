@@ -6,6 +6,7 @@ export default class Floor {
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.resources = this.experience.resources
+        this.sizes = this.experience.sizes
 
         this.setGeometry()
         this.setTextures()
@@ -14,7 +15,12 @@ export default class Floor {
     }
 
     setGeometry() {
-        this.geometry = new THREE.CircleGeometry(5, 64)
+        this.geometry = new THREE.PlaneGeometry(
+            this.sizes.sceneWidth,
+            this.sizes.sceneWidth,
+            200,
+            200,
+        )
     }
 
     setTextures() {
