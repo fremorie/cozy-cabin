@@ -66,7 +66,7 @@ export default [
     {
         name: 'wallDisplacementTexture',
         type: 'texture',
-        path: 'textures/shutter/wood_shutter_disp_1k.jpg'
+        path: 'textures/walls/shutter/wood_shutter_disp_1k.jpg'
     },
     // Rim
     {
