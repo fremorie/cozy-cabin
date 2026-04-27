@@ -3,6 +3,8 @@ import Experience from '../../Experience.js'
 import Walls from './Walls.js'
 import CozyWindow from './CozyWindow.js'
 import Roof from './Roof.js'
+import Door from './Door.js'
+import DoorRim from './DoorRim.js'
 
 export default class Cabin {
     constructor() {
@@ -26,6 +28,12 @@ export default class Cabin {
 
         this.roof = new Roof()
         this.group.add(this.roof.group)
+
+        this.door = new Door()
+        this.group.add(this.door.mesh)
+
+        this.doorRim = new DoorRim()
+        this.group.add(this.doorRim.group)
 
         this.setWindows()
     }
@@ -85,7 +93,6 @@ export default class Cabin {
 
         for (const cozyWindow of cozyWindows) {
             const windowGroup = (new CozyWindow(cozyWindow.position, cozyWindow.rotation)).group
-            console.log({windowGroup})
             this.group.add(windowGroup)
         }
     }
