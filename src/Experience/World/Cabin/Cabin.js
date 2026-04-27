@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import Experience from '../../Experience.js'
 import Walls from './Walls.js'
 import CozyWindow from './CozyWindow.js'
+import Roof from './Roof.js'
 
 export default class Cabin {
     constructor() {
@@ -22,6 +23,9 @@ export default class Cabin {
     setMeshes() {
         this.walls = new Walls()
         this.group.add(this.walls.mesh)
+
+        this.roof = new Roof()
+        this.group.add(this.roof.group)
 
         this.setWindows()
     }
