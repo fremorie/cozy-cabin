@@ -15,6 +15,12 @@ export default class Environment {
 
         this.setSunLight()
         this.setAmbientLight()
+        this.setFog()
+    }
+
+    setFog() {
+        this.scene.background = new THREE.Color('#191D3B')
+        this.scene.fog = new THREE.Fog('#191D3B', 10, 40)
     }
 
     setSunLight() {
