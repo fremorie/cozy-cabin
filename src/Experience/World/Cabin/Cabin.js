@@ -22,7 +22,7 @@ export default class Cabin {
 
     setMeshes() {
         this.walls = new Walls()
-        this.group.add(this.walls.mesh)
+        this.group.add(this.walls.group)
 
         this.roof = new Roof()
         this.group.add(this.roof.group)

@@ -8,10 +8,57 @@ export default class Walls {
         this.resources = this.experience.resources
         this.sizes = this.experience.sizes
 
+        this.group = new THREE.Object3D()
+
         this.setGeometry()
+        this.setAtticGeometry()
         this.setTextures()
         this.setMaterial()
         this.setMesh()
+    }
+
+    setAtticGeometry() {
+        this.atticGeometry = new THREE.BufferGeometry()
+        // Attic front and back
+        const vertices = new Float32Array([
+            // left side
+            -this.sizes.houseMeasurements.width / 2, 0, -this.sizes.houseMeasurements.depth / 2, // bottom left
+            this.sizes.houseMeasurements.width / 2, 0, -this.sizes.houseMeasurements.depth / 2, // bottom right
+            0, this.sizes.roofMeasurements.height, -this.sizes.houseMeasurements.depth / 2, // top
+
+            // right side
+            -this.sizes.houseMeasurements.width / 2, 0, this.sizes.houseMeasurements.depth / 2,
+            this.sizes.houseMeasurements.width / 2, 0,  this.sizes.houseMeasurements.depth / 2,
+            0, this.sizes.roofMeasurements.height,  this.sizes.houseMeasurements.depth / 2,
+        ])
+
+        const indices = [
+            0, 1, 2, // front triangle
+            3, 5, 4  // back triangle
+        ]
+
+        this.atticGeometry.setAttribute(
+            'position',
+            new THREE.BufferAttribute(vertices, 3)
+        )
+        this.atticGeometry.setIndex(indices)
+        const uvs = new Float32Array([
+            // front triangle
+            0, 0,   // bottom left
+            1, 0,   // bottom right
+            0.5, 1, // top
+
+            // back triangle
+            0, 0,
+            1, 0,
+            0.5, 1,
+        ])
+
+        this.atticGeometry.setAttribute(
+            'uv',
+            new THREE.BufferAttribute(uvs, 2)
+        )
+        this.atticGeometry.computeVertexNormals()
     }
 
     setGeometry() {
@@ -60,5 +107,11 @@ export default class Walls {
         this.mesh = new THREE.Mesh(this.geometry, this.material)
         this.mesh.position.y = this.sizes.houseMeasurements.height / 2
         this.mesh.receiveShadow = true
+
+        this.atticMesh = new THREE.Mesh(this.atticGeometry, this.material)
+        this.atticMesh.position.y = this.sizes.houseMeasurements.height
+        this.atticMesh.receiveShadow = true
+
+        this.group.add(this.mesh, this.atticMesh)
     }
 }
