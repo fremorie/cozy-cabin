@@ -30,6 +30,7 @@ export default class Sizes extends EventEmitter {
         }
 
         this.sceneWidth = 40
+        this.windowSize = 0.8
 
         // Resize event
         window.addEventListener('resize', () => {
