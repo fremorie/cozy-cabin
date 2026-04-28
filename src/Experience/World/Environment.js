@@ -38,7 +38,7 @@ export default class Environment {
     }
 
     setSunLight() {
-        this.sunLight = new THREE.DirectionalLight(this.debugObject.sunColor, 4.4)
+        this.sunLight = new THREE.DirectionalLight(this.debugObject.sunColor, 10)
         this.sunLight.castShadow = true
 
         this.sunLight.shadow.mapSize.set(1024, 1024)
