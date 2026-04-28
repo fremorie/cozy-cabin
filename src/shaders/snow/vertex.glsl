@@ -1,5 +1,7 @@
 uniform float uTime;
 
+varying float vRotation;
+
 float random(vec3 p) {
     return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453);
 }
@@ -23,5 +25,13 @@ void main() {
     vec4 projectedPosition = projectionMatrix * viewPosition;
 
     gl_Position = projectedPosition;
-    gl_PointSize = 3.0;
+    gl_PointSize = 100.0;
+    gl_PointSize *= 1.0 / -viewPosition.z;
+
+    if (gl_PointSize < 1.0) {
+        gl_Position = vec4(9999.9);
+    }
+
+    // Varyings
+    vRotation = sin(uTime) * 10.0;
 }
