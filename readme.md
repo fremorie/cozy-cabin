@@ -4,7 +4,9 @@ A Three.js scene with a cabin in the woods 🌲
 
 Demo: https://fremorie.github.io/cozy-cabin/
 
-<img width="1506" height="985" alt="Screenshot from 2026-04-20 01-11-11" src="https://github.com/user-attachments/assets/c687e315-d6dc-4a41-9d16-24c18f2d0796" />
+[Screencast from 28.04.2026 14:42:47.webm](https://github.com/user-attachments/assets/cff49bc2-7f80-4711-b3d1-a5d1bcabc193)
+
+
 
 
 ## Setup
