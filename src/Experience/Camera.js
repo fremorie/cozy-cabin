@@ -22,6 +22,10 @@ export default class Camera {
     setControls() {
         this.controls = new OrbitControls(this.instance, this.canvas)
         this.controls.enableDamping = true
+        this.controls.autoRotate = true
+        this.controls.autoRotateSpeed = 0.5
+        this.controls.maxDistance = 28
+        this.controls.maxPolarAngle = 80 * Math.PI / 180
     }
 
     resize() {
