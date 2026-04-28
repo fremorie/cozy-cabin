@@ -49,6 +49,7 @@ export default class Roof {
 
     setMaterial() {
         this.material = new THREE.MeshStandardMaterial({
+            color: 0x967C33,
             side: THREE.DoubleSide,
             map: this.textures.color,
             aoMap: this.textures.arm,
