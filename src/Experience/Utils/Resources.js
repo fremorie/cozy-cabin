@@ -17,9 +17,7 @@ export default class Resources extends EventEmitter {
     }
 
     setLoaders() {
-        this.manager = new THREE.LoadingManager(() => {
-            console.log('loaded!')
-        });
+        this.manager = new THREE.LoadingManager();
 
         this.loaders = {}
 

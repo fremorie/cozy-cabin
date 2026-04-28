@@ -44,6 +44,9 @@ export default class PineTree {
         pineTreeModel.traverse((child) => {
             if (!child.isMesh) return
 
+            child.material.alphaTest = 0.5
+            child.material.transparent = false
+
             const instanced = new THREE.InstancedMesh(
                 child.geometry,
                 child.material,
