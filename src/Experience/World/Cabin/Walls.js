@@ -107,6 +107,7 @@ export default class Walls {
         this.mesh = new THREE.Mesh(this.geometry, this.material)
         this.mesh.position.y = this.sizes.houseMeasurements.height / 2
         this.mesh.receiveShadow = true
+        this.mesh.castShadow = true
 
         this.atticMesh = new THREE.Mesh(this.atticGeometry, this.material)
         this.atticMesh.position.y = this.sizes.houseMeasurements.height

@@ -61,6 +61,7 @@ export default class Roof {
     setMesh() {
         this.roofLeftMesh = new THREE.Mesh(this.geometry, this.material)
         this.roofLeftMesh.receiveShadow = true
+        this.roofLeftMesh.castShadow = true
         this.roofLeftMesh.position.y = this.sizes.houseMeasurements.height + this.sizes.roofMeasurements.height / 2
         this.roofLeftMesh.position.x = -this.sizes.houseMeasurements.width / 4
         // Hack: add extra PI to flip the texture
@@ -71,6 +72,7 @@ export default class Roof {
 
         this.roofRightMesh = new THREE.Mesh(this.geometry, this.material)
         this.roofRightMesh.receiveShadow = true
+        this.roofRightMesh.castShadow = true
         this.roofRightMesh.position.y = this.sizes.houseMeasurements.height + this.sizes.roofMeasurements.height / 2
         this.roofRightMesh.position.x = -this.sizes.houseMeasurements.width / 4
         // Prevent z-fighting

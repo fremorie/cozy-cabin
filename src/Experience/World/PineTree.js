@@ -50,6 +50,9 @@ export default class PineTree {
                 treeCount
             )
 
+            instanced.castShadow = true
+            instanced.receiveShadow = true
+
             instancedMeshes.push(instanced)
             meshes.push(child)
 
@@ -114,6 +117,5 @@ export default class PineTree {
         instancedMeshes.forEach((instanced) => {
             instanced.instanceMatrix.needsUpdate = true
         })
-
     }
 }

@@ -38,10 +38,10 @@ export default class Fox {
         this.model.rotation.y = Math.PI / 2
         this.scene.add(this.model)
 
-        this.model.traverse((child) =>
-        {
+        this.model.traverse((child) => {
             if (child instanceof THREE.Mesh) {
                 child.castShadow = true
+                child.receiveShadow = true
             }
         })
     }

@@ -53,6 +53,8 @@ export default class DoorRim {
             this.geometry,
             this.material,
         )
+        this.rimLeftMesh.castShadow = true
+        this.rimLeftMesh.receiveShadow = true
 
         this.rimLeftMesh.position.set(
             -this.sizes.houseMeasurements.doorWidth / 2 + 0.4,
@@ -62,6 +64,8 @@ export default class DoorRim {
         this.group.add(this.rimLeftMesh)
 
         this.rimRightMesh = new THREE.Mesh(this.geometry, this.material)
+        this.rimRightMesh.castShadow = true
+        this.rimRightMesh.receiveShadow = true
         this.rimRightMesh.position.set(
             this.sizes.houseMeasurements.doorWidth / 2 - 0.4,
             this.sizes.houseMeasurements.doorHeight / 2,
@@ -73,6 +77,8 @@ export default class DoorRim {
             new THREE.BoxGeometry(this.sizes.houseMeasurements.doorWidth - 0.4, 0.2, 0.21),
             this.material,
         )
+        this.rimTopMesh.castShadow = true
+        this.rimTopMesh.receiveShadow = true
         this.rimTopMesh.position.set(
             0,
             this.sizes.houseMeasurements.doorHeight,
