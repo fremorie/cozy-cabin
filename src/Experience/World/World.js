@@ -3,6 +3,7 @@ import Environment from './Environment.js'
 import Floor from './Floor.js'
 import PineTree from './PineTree.js'
 import Fox from './Fox.js'
+import Snow from './Snow.js'
 import Cabin from './Cabin/Cabin.js'
 
 export default class World {
@@ -13,18 +14,24 @@ export default class World {
 
         // Wait for resources
         this.resources.on('ready', () => {
-            console.log('ready')
             // Setup
             this.floor = new Floor()
             this.pineTree = new PineTree()
             this.cabin = new Cabin()
             this.fox = new Fox()
+            this.snow = new Snow()
             this.environment = new Environment()
         })
     }
 
     update() {
-        if (this.fox)
+        if (this.fox) {
             this.fox.update()
+        }
+
+
+        if (this.snow) {
+            this.snow.update()
+        }
     }
 }
