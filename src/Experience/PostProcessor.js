@@ -18,13 +18,20 @@ export default class PostProcessor {
         this.experience = new Experience()
         this.renderer = this.experience.renderer
         this.sizes = this.experience.sizes
-
         this.scene = this.experience.scene
         this.camera = this.experience.camera
+
+        this.debug = this.experience.debug
+
+        // Debug
+        if (this.debug.active) {
+            this.debugFolder = this.debug.ui.addFolder('Post-processing')
+        }
 
         this.setRenderTarget()
         this.setInstance()
         this.setRenderPass()
+        this.setUnrealBloom()
     }
 
     setRenderTarget() {
@@ -49,6 +56,37 @@ export default class PostProcessor {
     setRenderPass() {
         this.renderPass = new RenderPass(this.scene, this.camera.instance)
         this.effectComposer.addPass(this.renderPass)
+    }
+
+    setUnrealBloom() {
+        this.unrealBloomPass = new UnrealBloomPass()
+        this.unrealBloomPass.strength = 0.219
+        this.unrealBloomPass.radius = 0.066
+        this.unrealBloomPass.threshold = 0.898
+        this.effectComposer.addPass(this.unrealBloomPass)
+
+        if (this.debug.active) {
+            this.debugFolder
+                .add(this.unrealBloomPass, 'enabled')
+
+            this.debugFolder
+                .add(this.unrealBloomPass, 'strength')
+                .min(0)
+                .max(2)
+                .step(0.001)
+
+            this.debugFolder
+                .add(this.unrealBloomPass, 'radius')
+                .min(0)
+                .max(2)
+                .step(0.001)
+
+            this.debugFolder
+                .add(this.unrealBloomPass, 'threshold')
+                .min(0)
+                .max(1)
+                .step(0.001)
+        }
     }
 
     resize() {
