@@ -2,12 +2,7 @@ import * as THREE from 'three'
 import {
     EffectComposer,
     RenderPass,
-    DotScreenPass,
-    GlitchPass,
     ShaderPass,
-    RGBShiftShader,
-    GammaCorrectionShader,
-    SMAAPass,
     UnrealBloomPass,
 } from 'three/addons'
 
