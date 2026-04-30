@@ -45,6 +45,10 @@ export default class Experience
         this.time.on('tick', () => {
             this.update()
         })
+
+        if (this.debug.active) {
+            console.log('=== RENDERER INFO ===\n', this.renderer.instance.info)
+        }
     }
 
     resize() {
