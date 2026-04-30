@@ -8,6 +8,7 @@ import Time from './Utils/Time.js'
 import Camera from './Camera.js'
 import Renderer from './Renderer.js'
 import World from './World/World.js'
+import PostProcessor from './PostProcessor.js'
 
 let instance = null
 
@@ -35,6 +36,7 @@ export default class Experience
         this.camera = new Camera()
         this.renderer = new Renderer()
         this.world = new World()
+        this.postProcessor = new PostProcessor()
 
         // Resize event
         this.sizes.on('resize', () => {
@@ -54,12 +56,14 @@ export default class Experience
     resize() {
         this.camera.resize()
         this.renderer.resize()
+        this.postProcessor.resize()
     }
 
     update() {
         this.camera.update()
         this.world.update()
-        this.renderer.update()
+        //this.renderer.update()
+        this.postProcessor.update()
     }
 
     destroy() {
