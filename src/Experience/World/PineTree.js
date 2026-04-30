@@ -29,7 +29,7 @@ export default class PineTree {
     generateForest() {
         const pineTreeModel = this.model
 
-        const treeCount = 3
+        const treeCount = 20
         const positions = []
 
         const instancedMeshes = []
