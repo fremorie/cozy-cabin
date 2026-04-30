@@ -21,6 +21,9 @@ export default class Renderer {
         this.instance.shadowMap.type = THREE.PCFShadowMap
         this.instance.setSize(this.sizes.width, this.sizes.height)
         this.instance.setPixelRatio(this.sizes.pixelRatio)
+
+        this.instance.shadowMap.autoUpdate = false
+        this.instance.shadowMap.needsUpdate = true // first render only
     }
 
     resize() {
