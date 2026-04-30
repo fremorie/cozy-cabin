@@ -49,6 +49,10 @@ export default class PineTree {
 
             child.material.color.multiplyScalar(0.9)
 
+            if ('roughness' in child.material) {
+                child.material.roughness = 0.8
+            }
+
             const instanced = new THREE.InstancedMesh(
                 child.geometry,
                 child.material,
