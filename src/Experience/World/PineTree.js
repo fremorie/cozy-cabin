@@ -47,6 +47,8 @@ export default class PineTree {
             child.material.alphaTest = 0.5
             child.material.transparent = false
 
+            child.material.color.multiplyScalar(0.9)
+
             const instanced = new THREE.InstancedMesh(
                 child.geometry,
                 child.material,
