@@ -16,7 +16,7 @@ export default class Environment {
 
         this.debugObject = {
             fogColor: '#1c242c',
-            sunColor: '#7096a9',
+            sunColor: '#b3c0c6',
         }
 
         this.setSunLight()

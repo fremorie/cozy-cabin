@@ -76,6 +76,16 @@ export default class Snow {
 
     setMesh() {
         this.mesh = new THREE.Points(this.geometry, this.material)
+        /* This places snow particles in front of the door.
+         Transparent objects are sorted per object, not per particle.
+
+          - Cabin door is transparent (uses alpha texture)
+          - Particles are transparent
+
+         The door might render after particles,
+         effectively hiding them even if particles are closer. */
+        this.mesh.renderOrder = 1
+
         this.scene.add(this.mesh)
     }
 
