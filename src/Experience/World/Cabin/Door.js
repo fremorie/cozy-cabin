@@ -54,8 +54,17 @@ export default class Door {
 
     setMesh() {
         this.mesh = new THREE.Mesh(this.geometry, this.material)
-        // Add 0.01 to prevent z-fighting
-        this.mesh.position.z = this.sizes.houseMeasurements.depth / 2 + 0.01
+        this.mesh.position.z = this.sizes.houseMeasurements.depth / 2
         this.mesh.position.y = this.sizes.houseMeasurements.doorHeight / 2
+
+        /* This places snow particles in front of the door.
+         Transparent objects are sorted per object, not per particle.
+
+          - Cabin door is transparent (uses alpha texture)
+          - Particles are transparent
+
+         The door might render after particles,
+         effectively hiding them even if particles are closer. */
+        this.mesh.renderOrder = 0
     }
 }
