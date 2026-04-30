@@ -25,6 +25,7 @@ export default class PostProcessor {
         this.setRenderTarget()
         this.setInstance()
         this.setRenderPass()
+        this.setUnrealBloom()
     }
 
     setRenderTarget() {
@@ -49,6 +50,14 @@ export default class PostProcessor {
     setRenderPass() {
         this.renderPass = new RenderPass(this.scene, this.camera.instance)
         this.effectComposer.addPass(this.renderPass)
+    }
+
+    setUnrealBloom() {
+        this.unrealBloomPass = new UnrealBloomPass()
+        this.unrealBloomPass.strength = 0.3
+        this.unrealBloomPass.radius = 1
+        this.unrealBloomPass.threshold = 0.6
+        this.effectComposer.addPass(this.unrealBloomPass)
     }
 
     resize() {
