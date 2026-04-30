@@ -1,5 +1,7 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
+import fragmentShader from '../../../shaders/window/fragment.glsl'
+import vertexShader from '../../../shaders/window/vertex.glsl'
 
 export default class CozyWindow {
     constructor(position, rotation) {
@@ -7,6 +9,7 @@ export default class CozyWindow {
         this.rotation = rotation ?? 0
 
         this.experience = new Experience()
+        this.time = this.experience.time
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.sizes = this.experience.sizes
@@ -20,7 +23,6 @@ export default class CozyWindow {
         this.setRimMesh()
         this.setStickMesh()
         this.setPlaneMesh()
-        this.setLight()
     }
 
     setGeometry() {
@@ -62,18 +64,13 @@ export default class CozyWindow {
             normalMap: this.textures.normal,
         })
 
-        this.planeMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    }
-
-    setLight() {
-        this.light = new THREE.RectAreaLight(0xffaa55, 5, this.sizes.windowSize, this.sizes.windowSize);
-        this.light.position.copy(this.position);
-        this.light.position.z += 0.01
-        this.light.position.x += 0.01
-        this.light.position.y += 0.01
-        this.light.rotation.y = this.rotation
-
-        this.group.add(this.light)
+        this.planeMaterial = new THREE.RawShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            uniforms: {
+                uTime: new THREE.Uniform(0),
+            }
+        });
     }
 
     setRimMesh() {
@@ -108,5 +105,9 @@ export default class CozyWindow {
         this.planeMesh.rotation.y = this.rotation
 
         this.group.add(this.planeMesh)
+    }
+
+    update() {
+        this.planeMaterial.uniforms.uTime.value = this.time.elapsed * 0.001
     }
 }
