@@ -13,6 +13,8 @@ export default class Cabin {
         this.resources = this.experience.resources
         this.sizes = this.experience.sizes
 
+        this.windows = []
+
         this.setGroup()
         this.setMeshes()
     }
@@ -92,8 +94,15 @@ export default class Cabin {
         ]
 
         for (const cozyWindow of cozyWindows) {
-            const windowGroup = (new CozyWindow(cozyWindow.position, cozyWindow.rotation)).group
-            this.group.add(windowGroup)
+            const windowInstance = new CozyWindow(cozyWindow.position, cozyWindow.rotation)
+            this.windows.push(windowInstance)
+            this.group.add(windowInstance.group)
         }
+    }
+
+    update() {
+        this.windows.forEach((cozyWindow) => {
+            cozyWindow.update()
+        })
     }
 }

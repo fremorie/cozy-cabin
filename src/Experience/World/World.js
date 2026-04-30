@@ -33,5 +33,9 @@ export default class World {
         if (this.snow) {
             this.snow.update()
         }
+
+        if (this.cabin) {
+            this.cabin.update()
+        }
     }
 }
