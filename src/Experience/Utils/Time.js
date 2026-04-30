@@ -1,8 +1,12 @@
-import EventEmitter from './EventEmitter.js'
+import EventEmitter from './EventEmitter'
+import Experience from '../Experience'
 
 export default class Time extends EventEmitter {
     constructor() {
         super()
+
+        this.experience = new Experience()
+        this.debug = this.experience.debug
 
         // Setup
         this.start = Date.now()
@@ -17,6 +21,10 @@ export default class Time extends EventEmitter {
     }
 
     tick() {
+        if (this.debug.active) {
+            this.debug.stats.begin()
+        }
+
         const currentTime = Date.now()
         this.delta = currentTime - this.current
         this.current = currentTime
@@ -27,5 +35,9 @@ export default class Time extends EventEmitter {
         window.requestAnimationFrame(() => {
             this.tick()
         })
+
+        if (this.debug.active) {
+            this.debug.stats.end()
+        }
     }
 }

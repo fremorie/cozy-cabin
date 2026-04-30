@@ -148,7 +148,6 @@ export default class Environment {
             this.debugFolder.add(effectController, 'mieDirectionalG', 0.0, 1, 0.001).onChange(guiChanged);
             this.debugFolder.add(effectController, 'elevation', 0, 90, 0.1).onChange(guiChanged);
             this.debugFolder.add(effectController, 'azimuth', -180, 180, 0.1).onChange(guiChanged);
-            this.debugFolder.add(effectController, 'exposure', 0, 1, 0.0001).onChange(guiChanged);
             const folderClouds = this.debugFolder.addFolder('Clouds');
             folderClouds.add(effectController, 'cloudCoverage', 0, 1, 0.01).name('coverage').onChange(guiChanged);
             folderClouds.add(effectController, 'cloudDensity', 0, 1, 0.01).name('density').onChange(guiChanged);
