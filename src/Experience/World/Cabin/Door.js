@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
+import { RENDER_ORDER } from '../../renderOrder.js'
 
 export default class Door {
     constructor() {
@@ -65,6 +66,6 @@ export default class Door {
 
          The door might render after particles,
          effectively hiding them even if particles are closer. */
-        this.mesh.renderOrder = 0
+        this.mesh.renderOrder = RENDER_ORDER.DOOR
     }
 }

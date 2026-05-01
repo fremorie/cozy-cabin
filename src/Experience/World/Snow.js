@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import Experience from '../Experience.js'
 import snowVertexShader from '../../shaders/snow/vertex.glsl'
 import snowFragmentShader from '../../shaders/snow/fragment.glsl'
+import { RENDER_ORDER } from '../renderOrder.js'
 
 export default class Snow {
     constructor() {
@@ -84,7 +85,7 @@ export default class Snow {
 
          The door might render after particles,
          effectively hiding them even if particles are closer. */
-        this.mesh.renderOrder = 1
+        this.mesh.renderOrder = RENDER_ORDER.SNOW
 
         this.scene.add(this.mesh)
     }
