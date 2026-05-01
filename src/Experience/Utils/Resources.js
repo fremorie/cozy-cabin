@@ -10,27 +10,29 @@ export default class Resources extends EventEmitter {
         this.sources = sources
 
         this.items = {}
-        this.toLoad = this.sources.length
-        this.loaded = 0
 
         this.loaderOverlay = new LoaderOverlay()
 
+        this.setManager()
         this.setLoaders()
         this.startLoading()
     }
 
-    setLoaders() {
+    setManager() {
         this.manager = new THREE.LoadingManager(
             // Loaded
             () => {
+                this.trigger('ready')
                 this.loaderOverlay.onReady()
             },
             // Progress
-            () => {},
-            // Error
-            () => {},
+            (itemUrl, itemsLoaded, itemsTotal) => {
+                this.loaderOverlay.onProgress(itemUrl, itemsLoaded, itemsTotal)
+            },
         );
+    }
 
+    setLoaders() {
         this.loaders = {}
 
         this.loaders.dracoLoader = new DRACOLoader(this.manager)
@@ -67,11 +69,5 @@ export default class Resources extends EventEmitter {
 
     sourceLoaded(source, file) {
         this.items[source.name] = file
-
-        this.loaded++
-
-        if (this.loaded === this.toLoad) {
-            this.trigger('ready')
-        }
     }
 }

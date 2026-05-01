@@ -71,7 +71,6 @@ export default class Floor {
         this.mesh.rotation.x = - Math.PI * 0.5
         this.mesh.receiveShadow = true
         this.mesh.renderOrder = RENDER_ORDER.FLOOR
-        console.log('Added floor', this.mesh)
         this.scene.add(this.mesh)
     }
 }
