@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { GLTFLoader, DRACOLoader } from 'three/addons'
 import EventEmitter from './EventEmitter.js'
+import LoaderOverlay from './LoaderOverlay.js'
 
 export default class Resources extends EventEmitter {
     constructor(sources) {
@@ -12,12 +13,23 @@ export default class Resources extends EventEmitter {
         this.toLoad = this.sources.length
         this.loaded = 0
 
+        this.loaderOverlay = new LoaderOverlay()
+
         this.setLoaders()
         this.startLoading()
     }
 
     setLoaders() {
-        this.manager = new THREE.LoadingManager();
+        this.manager = new THREE.LoadingManager(
+            // Loaded
+            () => {
+                this.loaderOverlay.onReady()
+            },
+            // Progress
+            () => {},
+            // Error
+            () => {},
+        );
 
         this.loaders = {}
 
@@ -26,8 +38,9 @@ export default class Resources extends EventEmitter {
 
         this.loaders.gltfLoader = new GLTFLoader(this.manager)
         this.loaders.gltfLoader.setDRACOLoader(this.loaders.dracoLoader)
-        this.loaders.textureLoader = new THREE.TextureLoader()
-        this.loaders.cubeTextureLoader = new THREE.CubeTextureLoader()
+
+        this.loaders.textureLoader = new THREE.TextureLoader(this.manager)
+        this.loaders.cubeTextureLoader = new THREE.CubeTextureLoader(this.manager)
     }
 
     startLoading() {
