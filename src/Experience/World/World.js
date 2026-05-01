@@ -5,6 +5,7 @@ import PineTree from './PineTree.js'
 import Fox from './Fox.js'
 import Snow from './Snow.js'
 import Cabin from './Cabin/Cabin.js'
+import LoaderOverlay from './LoaderOverlay.js'
 
 export default class World {
     constructor() {
@@ -21,6 +22,7 @@ export default class World {
             this.fox = new Fox()
             this.snow = new Snow()
             this.environment = new Environment()
+            this.loaderOverlay = new LoaderOverlay()
         })
     }
 
