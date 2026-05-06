@@ -31,13 +31,7 @@ export default class PineTree {
 
     setMaterial() {
         this.trunkMaterial = new THREE.MeshBasicMaterial({
-            transparent: true,
-            alphaMap: this.textures.trunk.alpha,
-            map: this.textures.trunk.color,
-            aoMap: this.textures.trunk.arm,
-            roughnessMap: this.textures.trunk.arm,
-            metalnessMap: this.textures.trunk.arm,
-            normalMap: this.textures.trunk.normal,
+            color: '#694B37',
         })
 
         this.snowMaterial = new THREE.MeshStandardMaterial({
@@ -54,7 +48,7 @@ export default class PineTree {
             // displacementBias: -0.2,
         })
 
-        this.threeMaterial = new THREE.MeshBasicMaterial({
+        this.threeMaterial = new THREE.MeshStandardMaterial({
             color: '#263E31'
         })
     }

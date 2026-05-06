@@ -20,6 +20,12 @@ export default [
     /**
      * Textures
      */
+    // Noise
+    {
+      name: 'perlinNoiseTexture',
+      type: 'texture',
+      path: 'textures/perlin.png',
+    },
     // Snowflake
     {
         name: 'snowflakeTexture',

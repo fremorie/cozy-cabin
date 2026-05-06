@@ -37,5 +37,9 @@ export default class World {
         if (this.cabin) {
             this.cabin.update()
         }
+
+        if (this.floor) {
+            this.floor.update()
+        }
     }
 }

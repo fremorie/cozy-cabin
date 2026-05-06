@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import Experience from '../Experience.js'
 import { RENDER_ORDER } from '../renderOrder.js'
+import vertexShader from '../../shaders/floor/vertex.glsl'
+import fragmentShader from '../../shaders/floor/fragment.glsl'
 
 export default class Floor {
     constructor() {
@@ -8,6 +10,7 @@ export default class Floor {
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.sizes = this.experience.sizes
+        this.time = this.experience.time
 
         this.setGeometry()
         this.setTextures()
@@ -19,15 +22,20 @@ export default class Floor {
         this.geometry = new THREE.PlaneGeometry(
             this.sizes.sceneWidth,
             this.sizes.sceneWidth,
-            200,
-            200,
         )
     }
 
     setTextures() {
         this.textures = {}
 
+        this.textures.perlinNoise = this.resources.items.perlinNoiseTexture
+        this.textures.perlinNoise.wrapS = THREE.RepeatWrapping
+        this.textures.perlinNoise.wrapT = THREE.RepeatWrapping
+        this.textures.perlinNoise.repeat.set(10, 10)
+
         this.textures.baked = this.resources.items.floorBakedTexture
+        // this.textures.baked.colorSpace = THREE.SRGBColorSpace
+        // this.textures.baked.flipY = false;
 
         this.textures.color = this.resources.items.floorColorTexture
         this.textures.color.colorSpace = THREE.SRGBColorSpace
@@ -54,18 +62,17 @@ export default class Floor {
     }
 
     setMaterial() {
-        this.material = new THREE.MeshStandardMaterial({
-            map: this.textures.baked
-            // transparent: true,
-            // alphaMap: this.textures.alpha,
-            // map: this.textures.color,
-            // aoMap: this.textures.arm,
-            // roughnessMap: this.textures.arm,
-            // metalnessMap: this.textures.arm,
-            // normalMap: this.textures.normal,
-            // displacementMap: this.textures.displacement,
-            // displacementScale: 0.5,
-            // displacementBias: -0.2,
+        this.material = new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            transparent: true,
+            uniforms: {
+                uBakedTexture: { value: this.textures.baked},
+                uAlphaTexture: { value: this.textures.alpha },
+                uLightColor: { value: new THREE.Color('#b3c0c6') },
+                uPerlinNoise: { value: this.textures.perlinNoise },
+                uTime: { value: 0 }
+            },
         })
     }
 
@@ -75,5 +82,9 @@ export default class Floor {
         this.mesh.receiveShadow = true
         this.mesh.renderOrder = RENDER_ORDER.FLOOR
         this.scene.add(this.mesh)
+    }
+
+    update() {
+        this.material.uniforms.uTime.value = this.time.elapsed * 0.001
     }
 }

@@ -56,6 +56,9 @@ export default class PostProcessor {
 
     setUnrealBloom() {
         this.unrealBloomPass = new UnrealBloomPass()
+
+        this.unrealBloomPass.enabled = false
+
         this.unrealBloomPass.strength = 0.219
         this.unrealBloomPass.radius = 0.066
         this.unrealBloomPass.threshold = 0.898
@@ -119,6 +122,7 @@ export default class PostProcessor {
         }
 
         this.tintPass = new ShaderPass(this.tintShader)
+        this.tintPass.enabled = false
         this.tintPass.material.uniforms.uTint.value = new THREE.Vector3(0.198, 0.211, 0.262)
         this.effectComposer.addPass(this.tintPass)
 
