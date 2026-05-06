@@ -8,6 +8,11 @@ export default [
         path: 'models/Pinetree/low-poly-pine.glb',
     },
     {
+        name: 'forestModel',
+        type: 'gltfModel',
+        path: 'models/Pinetree/forest.glb',
+    },
+    {
         name: 'foxModel',
         type: 'gltfModel',
         path: 'models/Fox/glTF/Fox.gltf'
@@ -22,6 +27,11 @@ export default [
         path: 'textures/weather/snowflake.png'
     },
     // Floor
+    {
+      name: 'floorBakedTexture',
+      type: 'texture',
+      path: 'textures/floor/baked_snow.jpg',
+    },
     {
         name: 'floorAlphaTexture',
         type: 'texture',

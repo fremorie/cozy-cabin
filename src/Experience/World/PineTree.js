@@ -16,12 +16,13 @@ export default class PineTree {
         }
 
         // Resource
-        this.resource = this.resources.items.pineTreeModel
+        this.resource = this.resources.items.forestModel
 
         this.setTextures()
         this.setMaterial()
         this.setModel()
-        this.generateForest()
+        //this.generateForest()
+        this.setForest()
     }
 
     setModel() {
@@ -31,19 +32,26 @@ export default class PineTree {
     setMaterial() {
         this.trunkMaterial = new THREE.MeshBasicMaterial({
             transparent: true,
-            alphaMap: this.textures.alpha,
-            map: this.textures.color,
-            aoMap: this.textures.arm,
-            roughnessMap: this.textures.arm,
-            metalnessMap: this.textures.arm,
-            normalMap: this.textures.normal,
-            displacementMap: this.textures.displacement,
-            displacementScale: 0.5,
-            displacementBias: -0.2,
+            alphaMap: this.textures.trunk.alpha,
+            map: this.textures.trunk.color,
+            aoMap: this.textures.trunk.arm,
+            roughnessMap: this.textures.trunk.arm,
+            metalnessMap: this.textures.trunk.arm,
+            normalMap: this.textures.trunk.normal,
         })
 
-        this.snowMaterial = new THREE.MeshBasicMaterial({
-            color: '#FFFFFF',
+        this.snowMaterial = new THREE.MeshStandardMaterial({
+            color: 0x999999,
+            // transparent: true,
+            // alphaMap: this.textures.snow.alpha,
+            // map: this.textures.snow.color,
+            // aoMap: this.textures.snow.arm,
+            // roughnessMap: this.textures.snow.arm,
+            // metalnessMap: this.textures.snow.arm,
+            // normalMap: this.textures.snow.normal,
+            // displacementMap: this.textures.snow.displacement,
+            // displacementScale: 0.5,
+            // displacementBias: -0.2,
         })
 
         this.threeMaterial = new THREE.MeshBasicMaterial({
@@ -52,28 +60,71 @@ export default class PineTree {
     }
 
     setTextures() {
-        this.textures = {}
+        this.textures = {
+            trunk: {},
+            snow: {},
+        }
 
-        this.textures.color = this.resources.items.pineColorTexture
-        this.textures.color.colorSpace = THREE.SRGBColorSpace
-        this.textures.color.repeat.set(2, 2)
-        this.textures.color.wrapS = THREE.RepeatWrapping
-        this.textures.color.wrapT = THREE.RepeatWrapping
+        this.setTrunkTextures()
+        this.setSnowTextures()
+    }
 
-        this.textures.normal = this.resources.items.pineNormalTexture
-        this.textures.normal.repeat.set(2, 2)
-        this.textures.normal.wrapS = THREE.RepeatWrapping
-        this.textures.normal.wrapT = THREE.RepeatWrapping
+    setTrunkTextures() {
+        this.textures.trunk.color = this.resources.items.pineColorTexture
+        this.textures.trunk.color.colorSpace = THREE.SRGBColorSpace
+        this.textures.trunk.color.repeat.set(2, 2)
+        this.textures.trunk.color.wrapS = THREE.RepeatWrapping
+        this.textures.trunk.color.wrapT = THREE.RepeatWrapping
 
-        this.textures.displacement = this.resources.items.pineDisplacementTexture
-        this.textures.displacement.repeat.set(2, 2)
-        this.textures.displacement.wrapS = THREE.RepeatWrapping
-        this.textures.displacement.wrapT = THREE.RepeatWrapping
+        this.textures.trunk.normal = this.resources.items.pineNormalTexture
+        this.textures.trunk.normal.repeat.set(2, 2)
+        this.textures.trunk.normal.wrapS = THREE.RepeatWrapping
+        this.textures.trunk.normal.wrapT = THREE.RepeatWrapping
 
-        this.textures.arm = this.resources.items.pineARMTexture
-        this.textures.arm.repeat.set(2, 2)
-        this.textures.arm.wrapS = THREE.RepeatWrapping
-        this.textures.arm.wrapT = THREE.RepeatWrapping
+        this.textures.trunk.displacement = this.resources.items.pineDisplacementTexture
+        this.textures.trunk.displacement.repeat.set(2, 2)
+        this.textures.trunk.displacement.wrapS = THREE.RepeatWrapping
+        this.textures.trunk.displacement.wrapT = THREE.RepeatWrapping
+
+        this.textures.trunk.arm = this.resources.items.pineARMTexture
+        this.textures.trunk.arm.repeat.set(2, 2)
+        this.textures.trunk.arm.wrapS = THREE.RepeatWrapping
+        this.textures.trunk.arm.wrapT = THREE.RepeatWrapping
+    }
+
+    setSnowTextures() {
+        this.textures.snow.color = this.resources.items.floorColorTexture
+        this.textures.snow.color.colorSpace = THREE.SRGBColorSpace
+        this.textures.snow.color.repeat.set(2, 2)
+        this.textures.snow.color.wrapS = THREE.RepeatWrapping
+        this.textures.snow.color.wrapT = THREE.RepeatWrapping
+
+        this.textures.snow.normal = this.resources.items.floorNormalTexture
+        this.textures.snow.normal.repeat.set(2, 2)
+        this.textures.snow.normal.wrapS = THREE.RepeatWrapping
+        this.textures.snow.normal.wrapT = THREE.RepeatWrapping
+
+        this.textures.snow.displacement = this.resources.items.floorDisplacementTexture
+        this.textures.snow.displacement.repeat.set(2, 2)
+        this.textures.snow.displacement.wrapS = THREE.RepeatWrapping
+        this.textures.snow.displacement.wrapT = THREE.RepeatWrapping
+
+        this.textures.snow.arm = this.resources.items.floorARMTexture
+        this.textures.snow.arm.repeat.set(2, 2)
+        this.textures.snow.arm.wrapS = THREE.RepeatWrapping
+        this.textures.snow.arm.wrapT = THREE.RepeatWrapping
+    }
+
+    setForest() {
+        const greenMesh = this.model.children.find(child => child.name === 'green')
+        const snowMesh = this.model.children.find(child => child.name === 'snow')
+        const trunkMesh = this.model.children.find(child => child.name === 'trunk')
+
+        greenMesh.material = this.threeMaterial
+        snowMesh.material = this.snowMaterial
+        trunkMesh.material = this.trunkMaterial
+
+        this.scene.add(this.model)
     }
 
     generateForest() {

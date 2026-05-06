@@ -111,7 +111,7 @@ export default class Environment {
             mieCoefficient: 0.089,
             mieDirectionalG: 0.257,
             elevation: 14.8,
-            azimuth: 56.1,
+            azimuth: 113.6,
             cloudCoverage: 0.37,
             cloudDensity: 0.79,
             cloudElevation: 0.11,

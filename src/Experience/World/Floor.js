@@ -27,6 +27,8 @@ export default class Floor {
     setTextures() {
         this.textures = {}
 
+        this.textures.baked = this.resources.items.floorBakedTexture
+
         this.textures.color = this.resources.items.floorColorTexture
         this.textures.color.colorSpace = THREE.SRGBColorSpace
         this.textures.color.repeat.set(2, 2)
@@ -53,16 +55,17 @@ export default class Floor {
 
     setMaterial() {
         this.material = new THREE.MeshStandardMaterial({
-            transparent: true,
-            alphaMap: this.textures.alpha,
-            map: this.textures.color,
-            aoMap: this.textures.arm,
-            roughnessMap: this.textures.arm,
-            metalnessMap: this.textures.arm,
-            normalMap: this.textures.normal,
-            displacementMap: this.textures.displacement,
-            displacementScale: 0.5,
-            displacementBias: -0.2,
+            map: this.textures.baked
+            // transparent: true,
+            // alphaMap: this.textures.alpha,
+            // map: this.textures.color,
+            // aoMap: this.textures.arm,
+            // roughnessMap: this.textures.arm,
+            // metalnessMap: this.textures.arm,
+            // normalMap: this.textures.normal,
+            // displacementMap: this.textures.displacement,
+            // displacementScale: 0.5,
+            // displacementBias: -0.2,
         })
     }
 
