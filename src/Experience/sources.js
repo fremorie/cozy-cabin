@@ -5,7 +5,7 @@ export default [
     {
         name: 'pineTreeModel',
         type: 'gltfModel',
-        path: 'models/Pinetree/pine.glb',
+        path: 'models/Pinetree/low-poly-pine.glb',
     },
     {
         name: 'foxModel',

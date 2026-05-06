@@ -26,6 +26,20 @@ export default class PineTree {
         this.model = this.resource.scene
     }
 
+    setMaterial() {
+        this.trunkMaterial = new THREE.MeshBasicMaterial({
+            color: '#694B37'
+        })
+
+        this.snowMaterial = new THREE.MeshBasicMaterial({
+            color: '#FFFFFF',
+        })
+
+        this.threeMaterial = new THREE.MeshBasicMaterial({
+            color: '#263E31'
+        })
+    }
+
     generateForest() {
         const pineTreeModel = this.model
 
@@ -39,6 +53,7 @@ export default class PineTree {
         const box = new THREE.Box3().setFromObject(pineTreeModel)
         const size = new THREE.Vector3()
         box.getSize(size)
+        // In order for this to work, the model must be positioned at (0, 0, 0) in Blender
         const baseRadius = Math.max(size.x, size.z) / 2
 
         pineTreeModel.traverse((child) => {
@@ -46,12 +61,6 @@ export default class PineTree {
 
             child.material.alphaTest = 0.5
             child.material.transparent = false
-
-            child.material.color.multiplyScalar(0.9)
-
-            if ('roughness' in child.material) {
-                child.material.roughness = 0.8
-            }
 
             const instanced = new THREE.InstancedMesh(
                 child.geometry,
@@ -74,7 +83,7 @@ export default class PineTree {
             const maxAttempts = 100
 
             do {
-                scale = 0.12 + Math.random() * 0.05
+                scale = 1 + Math.random() / 2
                 currentRadius = baseRadius * scale
 
                 const angle = Math.random() * Math.PI * 2
