@@ -8,6 +8,11 @@ export default [
         path: 'models/Pinetree/pine.glb',
     },
     {
+        name: 'lowPolyPineTreeModel',
+        type: 'gltfModel',
+        path: 'models/Pinetree/low-poly-pine.glb',
+    },
+    {
         name: 'foxModel',
         type: 'gltfModel',
         path: 'models/Fox/glTF/Fox.gltf'

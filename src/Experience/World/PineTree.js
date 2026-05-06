@@ -15,15 +15,44 @@ export default class PineTree {
             this.debugFolder = this.debug.ui.addFolder('pineTree')
         }
 
-        // Resource
-        this.resource = this.resources.items.pineTreeModel
+        if (this.experience.isMobile) {
+            this.setLowPolyModel()
+        } else {
+            this.setHighPolyModel()
+        }
 
-        this.setModel()
         this.generateForest()
     }
 
-    setModel() {
-        this.model = this.resource.scene
+    setHighPolyModel() {
+        this.model = this.resources.items.pineTreeModel.scene
+    }
+
+    setLowPolyModel() {
+        this.model = this.resources.items.lowPolyPineTreeModel.scene
+        this.setMaterial()
+    }
+
+    setMaterial() {
+        this.trunkMaterial = new THREE.MeshStandardMaterial({
+            color: '#694B37',
+        })
+
+        this.snowMaterial = new THREE.MeshStandardMaterial({
+            color: 0x999999,
+        })
+
+        this.treeMaterial = new THREE.MeshStandardMaterial({
+            color: '#263E31'
+        })
+
+        const greenMesh = this.model.children.find(child => child.name === 'green')
+        const snowMesh = this.model.children.find(child => child.name === 'snow')
+        const trunkMesh = this.model.children.find(child => child.name === 'trunk')
+
+        greenMesh.material = this.treeMaterial
+        snowMesh.material = this.snowMaterial
+        trunkMesh.material = this.trunkMaterial
     }
 
     generateForest() {
@@ -49,10 +78,6 @@ export default class PineTree {
 
             child.material.color.multiplyScalar(0.9)
 
-            if ('roughness' in child.material) {
-                child.material.roughness = 0.8
-            }
-
             const instanced = new THREE.InstancedMesh(
                 child.geometry,
                 child.material,
@@ -74,7 +99,7 @@ export default class PineTree {
             const maxAttempts = 100
 
             do {
-                scale = 0.12 + Math.random() * 0.05
+                scale = (this.experience.isMobile ? 1 : 0.12) + Math.random() * 0.05
                 currentRadius = baseRadius * scale
 
                 const angle = Math.random() * Math.PI * 2

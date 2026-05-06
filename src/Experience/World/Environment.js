@@ -44,7 +44,7 @@ export default class Environment {
         this.sunLight.shadow.mapSize.set(1024, 1024)
         this.sunLight.shadow.normalBias = 0.05
 
-        this.sunLight.position.set(20, 5.5, 1.6)
+        this.sunLight.position.set(1.312, 0.452, 1.6)
 
         this.sunLight.shadow.camera.top = 20
         this.sunLight.shadow.camera.right = 20
@@ -132,8 +132,11 @@ export default class Environment {
             const theta = THREE.MathUtils.degToRad( effectController.azimuth );
 
             this.sun.setFromSphericalCoords( 1, phi, theta );
-            this.sunLight.position.setFromSphericalCoords( 1, phi, theta );
-            this.sunLight.position.y += 0.4
+
+            if (this.debug.active) {
+                this.sunLight.position.setFromSphericalCoords( 1, phi, theta );
+                this.sunLight.position.y += 0.4
+            }
 
             uniforms[ 'sunPosition' ].value.copy( this.sun );
         }

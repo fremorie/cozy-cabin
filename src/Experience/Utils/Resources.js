@@ -2,12 +2,14 @@ import * as THREE from 'three'
 import { GLTFLoader, DRACOLoader } from 'three/addons'
 import EventEmitter from './EventEmitter.js'
 import LoaderOverlay from './LoaderOverlay.js'
+import Experience from '../Experience.js'
 
 export default class Resources extends EventEmitter {
     constructor(sources) {
         super()
 
         this.sources = sources
+        this.experience = new Experience()
 
         this.items = {}
 
@@ -22,6 +24,12 @@ export default class Resources extends EventEmitter {
         this.manager = new THREE.LoadingManager(
             // Loaded
             () => {
+                if (this.experience.isMobile) {
+                    this.items.pineTreeModel = undefined
+                } else {
+                    this.items.lowPolyPineTreeModel = undefined
+                }
+
                 this.trigger('ready')
                 this.loaderOverlay.onReady()
             },
