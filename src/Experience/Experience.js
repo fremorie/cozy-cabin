@@ -38,6 +38,8 @@ export default class Experience
         this.world = new World()
         this.postProcessor = new PostProcessor()
 
+        this.isMobile = window.matchMedia("(max-width: 768px)").matches;
+
         // Resize event
         this.sizes.on('resize', () => {
             this.resize()
