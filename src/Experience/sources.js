@@ -146,4 +146,25 @@ export default [
         type: 'texture',
         path: 'textures/door/roughness.webp'
     },
+    // Pine bark
+    {
+        name: 'pineColorTexture',
+        type: 'texture',
+        path: 'textures/trees/pine/pine_bark_diff_1k.jpg'
+    },
+    {
+        name: 'pineARMTexture',
+        type: 'texture',
+        path: 'textures/trees/pine/pine_bark_arm_1k.jpg'
+    },
+    {
+        name: 'pineNormalTexture',
+        type: 'texture',
+        path: 'textures/trees/pine/pine_bark_nor_gl_1k.jpg'
+    },
+    {
+        name: 'pineDisplacementTexture',
+        type: 'texture',
+        path: 'textures/trees/pine/pine_bark_disp_1k.jpg'
+    },
 ]

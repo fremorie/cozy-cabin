@@ -18,6 +18,8 @@ export default class PineTree {
         // Resource
         this.resource = this.resources.items.pineTreeModel
 
+        this.setTextures()
+        this.setMaterial()
         this.setModel()
         this.generateForest()
     }
@@ -28,7 +30,16 @@ export default class PineTree {
 
     setMaterial() {
         this.trunkMaterial = new THREE.MeshBasicMaterial({
-            color: '#694B37'
+            transparent: true,
+            alphaMap: this.textures.alpha,
+            map: this.textures.color,
+            aoMap: this.textures.arm,
+            roughnessMap: this.textures.arm,
+            metalnessMap: this.textures.arm,
+            normalMap: this.textures.normal,
+            displacementMap: this.textures.displacement,
+            displacementScale: 0.5,
+            displacementBias: -0.2,
         })
 
         this.snowMaterial = new THREE.MeshBasicMaterial({
@@ -38,6 +49,31 @@ export default class PineTree {
         this.threeMaterial = new THREE.MeshBasicMaterial({
             color: '#263E31'
         })
+    }
+
+    setTextures() {
+        this.textures = {}
+
+        this.textures.color = this.resources.items.pineColorTexture
+        this.textures.color.colorSpace = THREE.SRGBColorSpace
+        this.textures.color.repeat.set(2, 2)
+        this.textures.color.wrapS = THREE.RepeatWrapping
+        this.textures.color.wrapT = THREE.RepeatWrapping
+
+        this.textures.normal = this.resources.items.pineNormalTexture
+        this.textures.normal.repeat.set(2, 2)
+        this.textures.normal.wrapS = THREE.RepeatWrapping
+        this.textures.normal.wrapT = THREE.RepeatWrapping
+
+        this.textures.displacement = this.resources.items.pineDisplacementTexture
+        this.textures.displacement.repeat.set(2, 2)
+        this.textures.displacement.wrapS = THREE.RepeatWrapping
+        this.textures.displacement.wrapT = THREE.RepeatWrapping
+
+        this.textures.arm = this.resources.items.pineARMTexture
+        this.textures.arm.repeat.set(2, 2)
+        this.textures.arm.wrapS = THREE.RepeatWrapping
+        this.textures.arm.wrapT = THREE.RepeatWrapping
     }
 
     generateForest() {
@@ -55,6 +91,14 @@ export default class PineTree {
         box.getSize(size)
         // In order for this to work, the model must be positioned at (0, 0, 0) in Blender
         const baseRadius = Math.max(size.x, size.z) / 2
+
+        const greenMesh = this.model.children.find(child => child.name === 'green')
+        const snowMesh = this.model.children.find(child => child.name === 'snow')
+        const trunkMesh = this.model.children.find(child => child.name === 'trunk')
+
+        greenMesh.material = this.threeMaterial
+        snowMesh.material = this.snowMaterial
+        trunkMesh.material = this.trunkMaterial
 
         pineTreeModel.traverse((child) => {
             if (!child.isMesh) return
